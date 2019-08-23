@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend.dev.dockerfile
+    volumes:
+      - ./frontend/src:/node/myapp/src:delegated
+      - ./frontend/public:/node/myapp/public:delegated
