@@ -6,4 +6,6 @@ services:
       dockerfile: frontend.dev.dockerfile
     volumes:
       - ./frontend/src:/node/myapp/src:delegated
-      - ./frontend/public:/node/myapp/public:delegated
+      - ./frontend/public:/node/myapp/public:cached
+    ports:
+      - '3000:3000'
