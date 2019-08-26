@@ -1,4 +1,5 @@
-# https://github.com/wmnnd/nginx-certbot/
+# https://github.com/jwilder/nginx-proxy
+# https://github.com/jwilder/nginx-proxy#ssl-support-using-letsencrypt
 version: '3.7'
 services:
   nginx-proxy:
@@ -17,9 +18,36 @@ services:
       - '3000:3000'
     environment:
       - VIRTUAL_HOST=127.0.0.1.xip.io
+  db:
+    networks:
+      - backend
+    image: mongo:4.2.0-bionic
+    restart: always
+    ports:
+      - '27017:27017'
+    healthcheck:
+      test: echo'db.runCommand("ping").ok' | mongo localhost:27017/test/ --quiet
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes:
+      - db-mongo:/data/db
   api:
     image: api:latest
+    restart: on-failure
+    networks:
+      - backend
     ports:
       - '4000:4000'
     environment:
       - VIRTUAL_HOST=api.127.0.0.1.xip.io
+      - MONGO_URI=db:27017  # use container name for network
+      - MONGO_USERNAME=root
+      - MONGO_PASSWORD=example
+    healthcheck:
+      test: curl -f http://localhost:4000
+
+volumes:
+  db-mongo:
+networks:
+  backend:
