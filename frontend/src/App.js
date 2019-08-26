@@ -1,8 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import logo from "./logo.svg";
+import "./App.css";
 
 function App() {
+  const [apiStatus, setApiStatus] = useState(false);
+  useEffect(() => {
+    try {
+      fetch("https://api.127.0.0.1.xip.io/")
+        .then(res => res.json())
+        .then(res => {
+          console.log("api response:", res);
+          setApiStatus(res.success);
+        });
+    } catch (err) {
+      console.error(err);
+      setApiStatus(false);
+    }
+  }, []);
   return (
     <div className="App">
       <header className="App-header">
@@ -16,9 +30,9 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
-          I am testing the app for real time.
+          Learn React I am testing the app for real time.
         </a>
+        <div>api status: {apiStatus ? "good" : "bad"}</div>
       </header>
     </div>
   );

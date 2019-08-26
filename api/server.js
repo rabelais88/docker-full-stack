@@ -3,7 +3,7 @@ const cors = require('cors');
 
 const app = express();
 
-var whitelist = ['http://api.localhost', 'https://api.localhost', 'http://api.127.0.0.1.xip.io', 'https://api.127.0.0.1.xip.io', undefined]
+var whitelist = ['http://127.0.0.1.xip.io', 'https://127.0.0.1.xip.io', 'http://api.127.0.0.1.xip.io', 'https://api.127.0.0.1.xip.io', undefined]
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
