@@ -9,4 +9,4 @@ RUN mkdir /node/myapp -p
 COPY --from=dependency /node/myapp/. /node/myapp/
 WORKDIR /node/myapp
 EXPOSE 3000:3000
-CMD yarn start
+CMD node node_modules/.bin/react-scripts start
