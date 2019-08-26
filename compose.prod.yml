@@ -1,0 +1,25 @@
+# https://github.com/wmnnd/nginx-certbot/
+version: '3.7'
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./dockersettings/certs:/etc/nginx/certs
+      - ./dockersettings/dockersettings/dhparam:/etc/nginx/dhparam
+
+  frontend:
+    image: frontend:latest
+    ports:
+      - '3000:3000'
+    environment:
+      - VIRTUAL_HOST=127.0.0.1.xip.io
+  api:
+    image: api:latest
+    ports:
+      - '4000:4000'
+    environment:
+      - VIRTUAL_HOST=api.127.0.0.1.xip.io
