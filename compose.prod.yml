@@ -12,9 +12,10 @@ services:
       - api
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./dockersettings/certs:/etc/nginx/certs
       - ./dockersettings/dhparam:/etc/nginx/dhparam
-      - ./dockersettings/vhost.d:/etc/nginx/vhost.d
+      - nginx-vhost:/etc/nginx/vhost.d # for letsencrypt
+      - nginx-certs:/etc/nginx/certs # for letsencrypt
+      - ./dockersettings/vhost.d/127.0.0.1.xip.io:/etc/nginx/vhost.d/127.0.0.1.xip.io
       # - ./dockersettings/gzip.conf:/etc/nginx/conf.d/gzip.conf
 
   frontend:
@@ -24,6 +25,9 @@ services:
       - '3000:3000'
     environment:
       - VIRTUAL_HOST=127.0.0.1.xip.io
+      - VIRTUAL_HOST=sungryeol.xyz
+      - VIRUTAL_PORT=3000
+      - LETSENCRYPT_HOST=sungryeol.xyz
     # healthcheck:
     #   test: curl -f http://127.0.0.1:3000
 
@@ -53,14 +57,33 @@ services:
       - db
     init: true
     environment:
-      - VIRTUAL_HOST=api.127.0.0.1.xip.io
+      - VIRTUAL_HOST=api.sungryeol.xyz
+      - VIRUTAL_PORT=4000
+      - LETSENCRYPT_HOST=api.sungryeol.xyz
       - MONGO_URI=db:27017  # use container name for network
       - MONGO_USERNAME=root
       - MONGO_PASSWORD=example
     # healthcheck:
     #   test: curl -f http://127.0.0.1:4000
+  
+  nginx-letsencrypt:
+    volumes:
+      - type: volume
+        source: nginx-vhost
+        target: /etc/nginx/vhost.d
+        volume:
+          nocopy: true
+      - type: volume
+        source: nginx-certs
+        target: /etc/nginx/certs
+        volume:
+          nocopy: true
+    environment:
+      - DEFAULT_EMAIL=sungryeolp@gmail.com
 
 volumes:
   db-mongo:
+  nginx-vhost:
+  nginx-certs:
 # networks:
 #   backend:
