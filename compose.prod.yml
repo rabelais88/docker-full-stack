@@ -67,6 +67,7 @@ services:
     #   test: curl -f http://127.0.0.1:4000
   
   nginx-letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
     volumes:
       - type: volume
         source: nginx-vhost
