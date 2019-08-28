@@ -17,7 +17,7 @@ services:
       - ./dockersettings/dhparam:/etc/nginx/dhparam
       - nginx-vhost:/etc/nginx/vhost.d # for letsencrypt
       - nginx-certs:/etc/nginx/certs # for letsencrypt
-      - ./dockersettings/vhost.d/127.0.0.1.xip.io:/etc/nginx/vhost.d/127.0.0.1.xip.io
+      # - ./dockersettings/vhost.d/127.0.0.1.xip.io:/etc/nginx/vhost.d/127.0.0.1.xip.io
       # - ./dockersettings/gzip.conf:/etc/nginx/conf.d/gzip.conf
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
@@ -85,6 +85,7 @@ services:
       - LETSENCRYPT_TEST=true # after testing, remove this
       - LETSENCRYPT_RESTART_CONTAINER=true
       - DEBUG=true
+      - ACME_CA_URI=https://acme-staging.api.letsencrypt.org/directory # avoid 5cert/week/domain limit
 
 
 volumes:
