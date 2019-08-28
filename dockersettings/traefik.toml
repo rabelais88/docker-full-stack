@@ -16,10 +16,12 @@ defaultEntryPoints = ["http", "https"]
 
 [entryPoints]
   [entryPoints.http]
-  address = ":80"
+    address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
   [entryPoints.https]
-  address = ":443"
-    [entryPoints.https.tls]
+    address = ":443"
+  [entryPoints.https.tls]
 
 [acme]
 email = "sungryeolp@gmail.com"
