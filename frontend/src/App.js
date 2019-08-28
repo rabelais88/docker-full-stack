@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
+const apiUrl = process.env.API_URL || "https://api.127.0.0.1.xip.io";
 
 function App() {
   const [apiStatus, setApiStatus] = useState(false);
   useEffect(() => {
     try {
-      fetch("https://api.127.0.0.1.xip.io/")
+      fetch(apiUrl)
         .then(res => res.json())
         .then(res => {
           console.log("api response:", res);

@@ -28,6 +28,7 @@ services:
       - VIRTUAL_HOST=sungryeol.xyz
       - VIRUTAL_PORT=3000
       - LETSENCRYPT_HOST=sungryeol.xyz
+      - API_URL=api.sungryeol.xyz
     # healthcheck:
     #   test: curl -f http://127.0.0.1:3000
 
