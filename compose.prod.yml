@@ -76,6 +76,7 @@ services:
       - nginx-certs:/etc/nginx/certs # for letsencrypt
     environment:
       - DEFAULT_EMAIL=sungryeolp@gmail.com
+      - NGINX_PROXY_CONTAINER=nginx-letsencrypt
 
 
 volumes:
