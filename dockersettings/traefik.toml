@@ -26,8 +26,8 @@ defaultEntryPoints = ["http", "https"]
 [acme]
 email = "sungryeolp@gmail.com"
 storage = "acme.json"
-# caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
-caServer = "https://acme-staging.api.letsencrypt.org/directory"
+caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+# caServer = "https://acme-staging.api.letsencrypt.org/directory"
 # Enable on demand certificate. This will request a certificate from Let's Encrypt during the first TLS handshake for a hostname that does not yet have a certificate.
 # WARNING, TLS handshakes will be slow when requesting a hostname certificate for the first time, this can leads to DoS attacks.
 # WARNING, Take note that Let's Encrypt have rate limiting: https://letsencrypt.org/docs/rate-limits
