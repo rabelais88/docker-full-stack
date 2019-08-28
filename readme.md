@@ -1,5 +1,4 @@
 # full stack docker node.js app example with SSL
-everything in this app is self-explanatory. check the shell script files for info.
 
 # caveat
 - `nginx/proxy` has its own quirks, such as:
@@ -10,6 +9,21 @@ everything in this app is self-explanatory. check the shell script files for inf
 - apps should implement its own healthcheck feature. using `curl` is not really a recommended option for health checking.
 - version 2.0 of `traefik` provies better document than the previous ones. but it lacks some crucial info about migration.
 - ACME let's encrypt has [rate limit](https://letsencrypt.org/docs/rate-limits/). use [stage url](https://letsencrypt.org/docs/staging-environment/) for avoiding rate limit for development.
+
+# local test
+```bash
+. ./init-cert-dev.sh
+. ./build-n-stage.sh
+. ./stop-n-clean.sh
+```
+
+# production deploy
+```bash
+. ./init-cert-prod.sh
+docker stack deploy -c compose.prod.test.yml ${stack name} # nginx
+docker stack deploy -c compose.prod.traefik.yml ${stack name} # traefik
+docker stack rm ${service name}
+```
 
 # helpful links
 - https://github.com/jwilder/nginx-proxy
