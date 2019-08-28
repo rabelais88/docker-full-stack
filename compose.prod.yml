@@ -70,18 +70,13 @@ services:
   nginx-letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
     volumes:
-      - type: volume
-        source: nginx-vhost
-        target: /etc/nginx/vhost.d
-        volume:
-          nocopy: true
-      - type: volume
-        source: nginx-certs
-        target: /etc/nginx/certs
-        volume:
-          nocopy: true
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./dockersettings/dhparam:/etc/nginx/dhparam
+      - nginx-vhost:/etc/nginx/vhost.d # for letsencrypt
+      - nginx-certs:/etc/nginx/certs # for letsencrypt
     environment:
       - DEFAULT_EMAIL=sungryeolp@gmail.com
+
 
 volumes:
   db-mongo:
