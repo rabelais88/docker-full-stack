@@ -1,0 +1,65 @@
+# https://docs.traefik.io/v2.0/providers/docker/
+version: '3.7'
+services:
+
+  traefik:
+    image: traefik:v2.0
+    command: --api # Enables the web UI
+      - "80:80" # The HTTP port
+      - "443:443" # The HTTPS port
+      - "8080:8080" # The web UI
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./dockersettings/traefik.toml:/etc/traefik/traefik.toml
+      - traefik-acme:/etc/traefik/acme
+
+  frontend:
+    init: true
+    image: frontend:latest
+    ports:
+      - 3000:3000
+    environment:
+      - VIRTUAL_HOST=sungryeol.xyz,www.sungryeol.xyz
+      - LETSENCRYPT_HOST=sungryeol.xyz,www.sungryeol.xyz
+      - VIRUTAL_PORT=3000
+      - API_URL=api.sungryeol.xyz
+    labels:
+      - traefik.enable=true
+      - traefik.port=3000
+      - traefik.frontend.rule=Host:sungryeol.xyz
+
+  db:
+    image: mongo:4.2.0-bionic
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes:
+      - db-mongo:/data/db
+
+  api:
+    image: api:latest
+    restart: on-failure
+    ports:
+      - 4000:4000
+    depends_on:
+      - db
+    init: true
+    environment:
+      - MONGO_URI=db:27017  # use container name for network
+      - MONGO_USERNAME=root
+      - MONGO_PASSWORD=example
+    labels:
+      - traefik.enable=true
+      - traefik.port=4000
+      - traefik.frontend.rule=Host:api.sungryeol.xyz
+
+volumes:
+  db-mongo:
+  traefik-acme:

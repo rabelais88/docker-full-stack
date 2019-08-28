@@ -14,3 +14,4 @@ everything in this app is self-explanatory. check the shell script files for inf
 - https://github.com/jwilder/nginx-proxy#ssl-support-using-letsencrypt
 - https://github.com/jwilder/nginx-proxy/issues/1132
 - https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion/issues/102
+- https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion/blob/master/docs/Invalid-authorizations.md

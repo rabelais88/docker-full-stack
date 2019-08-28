@@ -1,0 +1,61 @@
+################################################################
+# Global configuration
+################################################################
+# Log level
+#
+# Optional
+# Default: "ERROR"
+# Accepted values, in order of severity: "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "PANIC"
+# Messages at and above the selected level will be logged.
+#
+logLevel = "ERROR"
+
+# Entrypoints to be used by frontends that do not specify any entrypoint.
+# Each frontend can specify its own entrypoints.
+defaultEntryPoints = ["http", "https"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+
+[acme]
+email = "sungryeolp@gmail.com"
+storage = "acme.json"
+# caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+caServer = "https://acme-staging.api.letsencrypt.org/directory"
+# Enable on demand certificate. This will request a certificate from Let's Encrypt during the first TLS handshake for a hostname that does not yet have a certificate.
+# WARNING, TLS handshakes will be slow when requesting a hostname certificate for the first time, this can leads to DoS attacks.
+# WARNING, Take note that Let's Encrypt have rate limiting: https://letsencrypt.org/docs/rate-limits
+onDemand = false
+# Enable certificate generation on frontends Host rules. This will request a certificate from Let's Encrypt for each frontend with a Host rule.
+# For example, a rule Host:test1.traefik.io,test2.traefik.io will request a certificate with main domain test1.traefik.io and SAN test2.traefik.io.
+OnHostRule = true
+entryPoint = "https"
+  [acme.httpChallenge]
+  entryPoint = "http"
+
+[[acme.domains]]
+  main = "sungryeol.xyz"
+  sans = ["sungryeol.xyz", "www.sungryeol.xyz", "api.sungryeol.xyz"]
+# [[acme.domains]]
+#   main = "local2.com"
+#   sans = ["test1.local2.com", "test2x.local2.com"]
+# [[acme.domains]]
+#   main = "local3.com"
+# [[acme.domains]]
+#   main = "local4.com"
+
+[docker]
+# Docker server endpoint. Can be a tcp or a unix socket endpoint.
+endpoint = "unix:///var/run/docker.sock"
+# Default domain used.
+# Can be overridden by setting the "traefik.domain" label on a container.
+# domain = "YOUR_DEFAULT_DOMAIN"
+# Enable watch docker changes
+watch = true
+# Expose containers by default in traefik
+# If set to false, containers that don't have `traefik.enable=true` will be ignored
+exposedbydefault = false
