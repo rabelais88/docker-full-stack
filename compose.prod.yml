@@ -5,7 +5,6 @@ version: '3.7'
 services:
   nginx-proxy:
     image: jwilder/nginx-proxy
-    container_name: nginx-proxy
     ports:
       - '80:80'
       - '443:443'
@@ -20,7 +19,7 @@ services:
       - ./dockersettings/vhost.d/127.0.0.1.xip.io:/etc/nginx/vhost.d/127.0.0.1.xip.io
       # - ./dockersettings/gzip.conf:/etc/nginx/conf.d/gzip.conf
     labels:
-      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
 
   frontend:
     init: true
@@ -73,7 +72,6 @@ services:
   
   nginx-letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: nginx-proxy-lets-encrypt
     depends_on:
      - "nginx-proxy"
     volumes:
@@ -83,7 +81,7 @@ services:
       - nginx-certs:/etc/nginx/certs:rw # for letsencrypt
     environment:
       - DEFAULT_EMAIL=sungryeolp@gmail.com
-      # - NGINX_PROXY_CONTAINER=nginx-letsencrypt
+      - NGINX_PROXY_CONTAINER=nginx-letsencrypt
 
 
 volumes:
