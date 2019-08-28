@@ -1,6 +1,7 @@
 # https://github.com/jwilder/nginx-proxy
 # https://github.com/jwilder/nginx-proxy#ssl-support-using-letsencrypt
 # https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion/issues/102
+# https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion/blob/master/docs/Invalid-authorizations.md
 version: '3.7'
 services:
   nginx-proxy:
@@ -28,9 +29,9 @@ services:
       - 3000:3000
     environment:
       - VIRTUAL_HOST=127.0.0.1.xip.io
-      - VIRTUAL_HOST=sungryeol.xyz
+      - VIRTUAL_HOST=sungryeol.xyz,www.sungryeol.xyz
       - VIRUTAL_PORT=3000
-      - LETSENCRYPT_HOST=sungryeol.xyz
+      - LETSENCRYPT_HOST=sungryeol.xyz,www.sungryeol.xyz
       - API_URL=api.sungryeol.xyz
     # healthcheck:
     #   test: curl -f http://127.0.0.1:3000
@@ -73,7 +74,7 @@ services:
   nginx-letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
     depends_on:
-     - "nginx-proxy"
+     - nginx-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - html:/usr/share/nginx/html
@@ -82,6 +83,9 @@ services:
     environment:
       - DEFAULT_EMAIL=sungryeolp@gmail.com
       - NGINX_PROXY_CONTAINER=nginx-proxy
+      - LETSENCRYPT_TEST=true # after testing, remove this
+      - LETSENCRYPT_RESTART_CONTAINER=true
+      - DEBUG=true
 
 
 volumes:
@@ -89,10 +93,6 @@ volumes:
   nginx-vhost:
   nginx-certs:
   html:
-
-networks:
-  default:
-    external: true
 
 # networks:
 #   backend:
