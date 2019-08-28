@@ -48,6 +48,13 @@ entryPoint = "https"
 # [[acme.domains]]
 #   main = "local4.com"
 
+# REMOVE this section if you don't want the dashboard/API
+[api]
+entryPoint = "api"
+dashboard = true
+
+[retry]
+
 [docker]
 # Docker server endpoint. Can be a tcp or a unix socket endpoint.
 endpoint = "unix:///var/run/docker.sock"
