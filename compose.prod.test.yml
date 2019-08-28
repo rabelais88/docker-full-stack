@@ -82,10 +82,10 @@ services:
     environment:
       - DEFAULT_EMAIL=sungryeolp@gmail.com
       - NGINX_PROXY_CONTAINER=nginx-proxy
-      - LETSENCRYPT_TEST=true # after testing, remove this
+      # - LETSENCRYPT_TEST=true # after testing, remove this
       - LETSENCRYPT_RESTART_CONTAINER=true
-      - DEBUG=true
-      - ACME_CA_URI=https://acme-staging-v02.api.letsencrypt.org/directory # avoid 5cert/week/domain limit
+      # - DEBUG=true
+      # - ACME_CA_URI=https://acme-staging-v02.api.letsencrypt.org/directory # avoid 5cert/week/domain limit
 
 volumes:
   db-mongo:
