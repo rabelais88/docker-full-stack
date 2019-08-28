@@ -1,9 +1,11 @@
 # https://github.com/jwilder/nginx-proxy
 # https://github.com/jwilder/nginx-proxy#ssl-support-using-letsencrypt
+# https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion/issues/102
 version: '3.7'
 services:
   nginx-proxy:
     image: jwilder/nginx-proxy
+    container_name: nginx-proxy
     ports:
       - '80:80'
       - '443:443'
@@ -17,6 +19,8 @@ services:
       - nginx-certs:/etc/nginx/certs # for letsencrypt
       - ./dockersettings/vhost.d/127.0.0.1.xip.io:/etc/nginx/vhost.d/127.0.0.1.xip.io
       # - ./dockersettings/gzip.conf:/etc/nginx/conf.d/gzip.conf
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
 
   frontend:
     init: true
@@ -69,19 +73,23 @@ services:
   
   nginx-letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: nginx-proxy-lets-encrypt
+    depends_on:
+     - "nginx-proxy"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./dockersettings/dhparam:/etc/nginx/dhparam
+      - html:/usr/share/nginx/html
       - nginx-vhost:/etc/nginx/vhost.d # for letsencrypt
-      - nginx-certs:/etc/nginx/certs # for letsencrypt
+      - nginx-certs:/etc/nginx/certs:rw # for letsencrypt
     environment:
       - DEFAULT_EMAIL=sungryeolp@gmail.com
-      - NGINX_PROXY_CONTAINER=nginx-letsencrypt
+      # - NGINX_PROXY_CONTAINER=nginx-letsencrypt
 
 
 volumes:
   db-mongo:
   nginx-vhost:
   nginx-certs:
+  html:
 # networks:
 #   backend:
