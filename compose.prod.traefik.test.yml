@@ -28,7 +28,7 @@ services:
     labels:
       # - traefik.enable=true
       - traefik.port=3000
-      - traefik.frontend.rule=Host:sungryeol.xyz
+      - traefik.frontend.rule=Host:sungryeol.xyz,www.sungryeol.xyz
       - API_URL=api.sungryeol.xyz
 
   db:
