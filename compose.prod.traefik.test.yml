@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   traefik:
-    # image: traefik:v2.0
+    # image: traefik:v2.0 # entrypoint is not available since 2.0 and not really sure how to use it
     image: traefik:latest
     ports:
       - 80:80
@@ -14,9 +14,9 @@ services:
       - ./dockersettings/traefik.toml:/etc/traefik/traefik.toml
       - traefik-acme:/etc/traefik/acme
     labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:traefik.sungryeol.xyz"
-      - "traefik.port=8080"
+      - traefik.enable=true
+      - traefik.frontend.rule=Host:traefik.sungryeol.xyz
+      - traefik.port=8080
 
   frontend:
     init: true
@@ -24,14 +24,12 @@ services:
     ports:
       - 3000:3000
     environment:
-      - VIRTUAL_HOST=sungryeol.xyz,www.sungryeol.xyz
-      - LETSENCRYPT_HOST=sungryeol.xyz,www.sungryeol.xyz
-      - VIRUTAL_PORT=3000
       - API_URL=api.sungryeol.xyz
     labels:
-      - traefik.enable=true
+      # - traefik.enable=true
       - traefik.port=3000
       - traefik.frontend.rule=Host:sungryeol.xyz
+      - API_URL=api.sungryeol.xyz
 
   db:
     image: mongo:4.2.0-bionic
@@ -57,7 +55,7 @@ services:
       - MONGO_USERNAME=root
       - MONGO_PASSWORD=example
     labels:
-      - traefik.enable=true
+      # - traefik.enable=true
       - traefik.port=4000
       - traefik.frontend.rule=Host:api.sungryeol.xyz
 
