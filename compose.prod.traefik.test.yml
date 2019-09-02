@@ -18,6 +18,7 @@ services:
       - traefik.enable=true
       - traefik.frontend.rule=Host:traefik.sungryeol.xyz
       - traefik.port=8080
+      - WAIT_HOSTS=api:4000, frontend:3000
 
   frontend:
     init: true
