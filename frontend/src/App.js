@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-const apiUrl = process.env.API_URL || "https://api.127.0.0.1.xip.io";
+const apiUrl = process.env.REACT_APP_API_URL || "https://api.127.0.0.1.xip.io";
 
 function App() {
   const [apiStatus, setApiStatus] = useState(false);
