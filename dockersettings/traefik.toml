@@ -8,7 +8,7 @@
 # Accepted values, in order of severity: "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "PANIC"
 # Messages at and above the selected level will be logged.
 #
-logLevel = "ERROR"
+logLevel = "DEBUG"
 
 # Entrypoints to be used by frontends that do not specify any entrypoint.
 # Each frontend can specify its own entrypoints.
@@ -42,7 +42,11 @@ entryPoint = "https"
 
 [[acme.domains]]
   main = "sungryeol.xyz"
-  sans = ["sungryeol.xyz", "www.sungryeol.xyz", "api.sungryeol.xyz"]
+[[acme.domains]]
+  main = "www.sungryeol.xyz"
+[[acme.domains]]
+  main = "api.sungryeol.xyz"
+  # sans = ["sungryeol.xyz", "www.sungryeol.xyz", "api.sungryeol.xyz"]
 # [[acme.domains]]
 #   main = "local2.com"
 #   sans = ["test1.local2.com", "test2x.local2.com"]
@@ -53,8 +57,9 @@ entryPoint = "https"
 
 # REMOVE this section if you don't want the dashboard/API
 [api]
-entryPoint = "api"
+entryPoint = "traefik"
 dashboard = true
+address = ":8080"
 
 [retry]
 
@@ -62,6 +67,8 @@ dashboard = true
 # Docker server endpoint. Can be a tcp or a unix socket endpoint.
 endpoint = "unix:///var/run/docker.sock"
 # Default domain used.
+domain = "sungryeol.xyz"
+
 # Can be overridden by setting the "traefik.domain" label on a container.
 # domain = "YOUR_DEFAULT_DOMAIN"
 # Enable watch docker changes
