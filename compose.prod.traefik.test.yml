@@ -9,13 +9,11 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dockersettings/traefik.toml:/etc/traefik/traefik.toml
       - traefik-acme:/etc/traefik/acme.json
     labels:
-      - traefik.enable=true
       - traefik.frontend.rule=Host:traefik.sungryeol.xyz
       - traefik.port=8080
     environment:
@@ -29,7 +27,7 @@ services:
     environment:
       - API_URL=api.sungryeol.xyz
     labels:
-      # - traefik.enable=true
+      - traefik.enable=true
       - traefik.port=3000
       - traefik.frontend.rule=Host:sungryeol.xyz,www.sungryeol.xyz
       - API_URL=api.sungryeol.xyz
@@ -50,15 +48,13 @@ services:
     restart: on-failure
     ports:
       - 4000:4000
-    depends_on:
-      - db
     init: true
     environment:
       - MONGO_URI=db:27017  # use container name for network
       - MONGO_USERNAME=root
       - MONGO_PASSWORD=example
     labels:
-      # - traefik.enable=true
+      - traefik.enable=true
       - traefik.port=4000
       - traefik.frontend.rule=Host:api.sungryeol.xyz
 
