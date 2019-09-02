@@ -42,13 +42,13 @@ entryPoint = "https"
 
 [[acme.domains]]
   main = "sungryeol.xyz"
-[[acme.domains]]
-  main = "www.sungryeol.xyz"
-[[acme.domains]]
-  main = "api.sungryeol.xyz"
-[[acme.domains]]
-  main = "traefik.sungryeol.xyz"
-  # sans = ["sungryeol.xyz", "www.sungryeol.xyz", "api.sungryeol.xyz"]
+# [[acme.domains]]
+#   main = "www.sungryeol.xyz"
+# [[acme.domains]]
+#   main = "api.sungryeol.xyz"
+# [[acme.domains]]
+#   main = "traefik.sungryeol.xyz"
+  sans = ["sungryeol.xyz", "www.sungryeol.xyz", "api.sungryeol.xyz"]
 # [[acme.domains]]
 #   main = "local2.com"
 #   sans = ["test1.local2.com", "test2x.local2.com"]
