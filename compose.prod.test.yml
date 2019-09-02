@@ -57,7 +57,7 @@ services:
     ports:
       - 27017:27017
     # healthcheck:
-    #   test: echo'db.runCommand("ping").ok' | mongo 127.0.0.1:27017/test/ --quiet
+    #   test: echo 'db.runCommand("ping").ok' | mongo 127.0.0.1:27017/test/ --quiet
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=example
@@ -85,7 +85,8 @@ services:
     #   test: curl -f http://127.0.0.1:4000
   
   nginx-letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
+    # image: jrcs/letsencrypt-nginx-proxy-companion
+    image: nginx-letsencrypt:latest
     # depends_on:
     #  - nginx-proxy
     volumes:
@@ -98,9 +99,10 @@ services:
       - NGINX_PROXY_CONTAINER=nginx-proxy
       - LETSENCRYPT_TEST=true # after testing, remove this
       - LETSENCRYPT_RESTART_CONTAINER=true
-      - NGINX_DOCKER_GEN_CONTAINER=nginx-proxy-gen
-      # - DEBUG=true
+      # - NGINX_DOCKER_GEN_CONTAINER=nginx-proxy-gen
+      - DEBUG=true
       # - ACME_CA_URI=https://acme-staging-v02.api.letsencrypt.org/directory # avoid 5cert/week/domain limit
+      - WAIT_HOSTS=api:4000, frontend:3000, nginx-proxy:80
 
 volumes:
   db-mongo:
