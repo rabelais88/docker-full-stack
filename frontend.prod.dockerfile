@@ -5,6 +5,7 @@ WORKDIR /node/myapp
 RUN yarn install --production=true
 COPY frontend/public/. ./public/
 COPY frontend/src/. ./src/
+ENV API_URL https://api.sungryeol.xyz
 RUN yarn build
 
 FROM node:12.9.0-alpine
