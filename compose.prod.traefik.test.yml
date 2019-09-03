@@ -14,11 +14,14 @@ services:
       - ./dockersettings/traefik.toml:/etc/traefik/traefik.toml
       - traefik-acme:/etc/traefik/acme.json
     labels:
-      - traefik.enable=true
+      # - traefik.enable=true
       - traefik.frontend.rule=Host:traefik.sungryeol.xyz
-      - traefik.port=8080
+      # - traefik.port=8080
+      - traefik.docker.network=web
     environment:
       WAIT_HOSTS: api:4000, frontend:3000
+    networks:
+      - web
 
   frontend:
     init: true
@@ -27,11 +30,15 @@ services:
       - 3000:3000
     # environment:
     #   - REACT_APP_API_URL=api.sungryeol.xyz
+    networks:
+      - web
     labels:
       - traefik.enable=true
       - traefik.port=3000
       - traefik.frontend.rule=Host:sungryeol.xyz,www.sungryeol.xyz
-      - API_URL=api.sungryeol.xyz
+      - REACT_APP_API_URL=api.sungryeol.xyz
+      - traefik.docker.network=web
+      - traefik.backend=sungryeol-frontend
 
   db:
     image: mongo:4.2.0-bionic
@@ -58,7 +65,15 @@ services:
       - traefik.enable=true
       - traefik.port=4000
       - traefik.frontend.rule=Host:api.sungryeol.xyz
+      - traefik.docker.network=web
+      - traefik.backend=sungryeol-api
+    networks:
+      - web
 
 volumes:
   db-mongo:
   traefik-acme:
+
+networks:
+  web:
+    external: true
