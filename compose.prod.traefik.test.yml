@@ -1,4 +1,6 @@
 # https://docs.traefik.io/v2.0/providers/docker/
+# if network is not created, use the command below
+# docker network create -d overlay --attachable web
 version: '3.7'
 services:
 
@@ -19,7 +21,7 @@ services:
       # - traefik.port=8080
       - traefik.docker.network=web
     environment:
-      WAIT_HOSTS: api:4000, frontend:3000
+      WAIT_HOSTS: localhost:4000, localhost:3000
     networks:
       - web
 
@@ -58,7 +60,7 @@ services:
       - 4000:4000
     init: true
     environment:
-      - MONGO_URI=db:27017  # use container name for network
+      - MONGO_URI=localhost:27017  # use container name for network
       - MONGO_USERNAME=root
       - MONGO_PASSWORD=example
     labels:
