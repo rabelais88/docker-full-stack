@@ -19,7 +19,7 @@ services:
       # - traefik.enable=true
       - traefik.frontend.rule=Host:traefik.sungryeol.xyz
       # - traefik.port=8080
-      - traefik.docker.network=docker-full-stack_web
+      - traefik.docker.network=${COMPOSE_PROJECT_NAME:-docker-full-stack}_web
     environment:
       WAIT_HOSTS: api:4000, frontend:3000
     networks:
@@ -39,7 +39,7 @@ services:
       - traefik.port=3000
       - traefik.frontend.rule=Host:sungryeol.xyz,www.sungryeol.xyz
       - REACT_APP_API_URL=api.sungryeol.xyz
-      - traefik.docker.network=docker-full-stack_web
+      - traefik.docker.network=${COMPOSE_PROJECT_NAME:-docker-full-stack}_web
       - traefik.backend=sungryeol-frontend
 
   db:
@@ -69,7 +69,7 @@ services:
       - traefik.enable=true
       - traefik.port=4000
       - traefik.frontend.rule=Host:api.sungryeol.xyz
-      - traefik.docker.network=docker-full-stack_web
+      - traefik.docker.network=${COMPOSE_PROJECT_NAME:-docker-full-stack}_web
       - traefik.backend=sungryeol-api
     networks:
       - web
