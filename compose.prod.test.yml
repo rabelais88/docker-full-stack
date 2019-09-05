@@ -26,8 +26,8 @@ services:
     ports:
       - 3000:3000
     environment:
-      - VIRTUAL_HOST=sungryeol.xyz,www.sungryeol.xyz
-      - LETSENCRYPT_HOST=sungryeol.xyz,www.sungryeol.xyz
+      - VIRTUAL_HOST=sungryeol.xyz
+      - LETSENCRYPT_HOST=sungryeol.xyz
       - VIRUTAL_PORT=3000
       - API_URL=api.sungryeol.xyz
     # healthcheck:

@@ -1,0 +1,62 @@
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Docker-compose-wait starting with configuration:
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | ------------------------------------------------
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |  - Hosts to be waiting for: [api:4000, frontend:3000, nginx-proxy:80]
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |  - Timeout before failure: 30 seconds
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |  - Sleeping time before checking for hosts availability: 0 seconds
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |  - Sleeping time once all hosts are available: 0 seconds
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | ------------------------------------------------
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Checking availability of api:4000
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 not yet available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host api:4000 is now available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Checking availability of  frontend:3000
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host  frontend:3000 is now available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Checking availability of  nginx-proxy:80
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Host  nginx-proxy:80 is now available
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | 2019/09/05 02:21:31 Generated '/app/letsencrypt_service_data' from 5 containers
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | 2019/09/05 02:21:31 Running '/app/signal_le_service'
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | 2019/09/05 02:21:31 Watching docker events
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | 2019/09/05 02:21:31 Contents of /app/letsencrypt_service_data did not change. Skipping notification '/app/signal_le_service'
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | /etc/nginx/certs/api.sungryeol.xyz /app
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Reloading nginx proxy (1ff0f1d6a04f38b84deefc49dfda967de11253cdf7059d22dca5eeaf92920978)...
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | 2019/09/05 02:21:32 Contents of /etc/nginx/conf.d/default.conf did not change. Skipping notification ''
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | 2019/09/05 02:21:32 [notice] 65#65: signal process started
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Creating/renewal api.sungryeol.xyz certificates... (api.sungryeol.xyz)
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | 2019-09-05 02:21:35,151:INFO:simp_le:1479: Generating new certificate private key
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Traceback (most recent call last):
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |   File "/usr/lib/python3.6/site-packages/simp_le.py", line 1419, in get_certr
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |     max_attempts=(10 * len(authorizations)))
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |   File "/usr/lib/python3.6/site-packages/acme/client.py", line 482, in poll_and_request_issuance
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |     raise errors.PollError(exhausted, updated)
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | acme.errors.PollError
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | During handling of the above exception, another exception occurred:
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Traceback (most recent call last):
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |   File "/usr/lib/python3.6/site-packages/simp_le.py", line 1583, in main
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |     return main_with_exceptions(cli_args)
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |   File "/usr/lib/python3.6/site-packages/simp_le.py", line 1567, in main_with_exceptions
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |     persist_new_data(args, existing_data)
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |   File "/usr/lib/python3.6/site-packages/simp_le.py", line 1483, in persist_new_data
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |     certr = get_certr(client, csr, authorizations)
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |   File "/usr/lib/python3.6/site-packages/simp_le.py", line 1425, in get_certr
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |     ', '.join(authzr.uri for _, authzr in error.exhausted)
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |   File "/usr/lib/python3.6/site-packages/simp_le.py", line 1425, in <genexpr>
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |     ', '.join(authzr.uri for _, authzr in error.exhausted)
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | ValueError: too many values to unpack (expected 2)
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Unhandled error has happened, traceback is above
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    |
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | Debugging tips: -v improves output verbosity. Help is available under --help.
+docker-full-stack_nginx-letsencrypt.1.jdjwp51hqq2p@sungryeol    | /app
