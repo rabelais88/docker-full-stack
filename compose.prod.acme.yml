@@ -14,7 +14,9 @@ services:
       - ./dockersettings/dhparam:/etc/nginx/dhparam
       - nginx-vhost:/etc/nginx/vhost.d # for letsencrypt
       - nginx-certs:/etc/nginx/certs # for letsencrypt
-      - nginx-conf:/etc/nginx/conf.d
+      - nginx-conf-d:/etc/nginx/conf.d
+      - nginx-conf:/etc/nginx/nginx.conf
+
       # - ./dockersettings/vhost.d/127.0.0.1.xip.io:/etc/nginx/vhost.d/127.0.0.1.xip.io
       # - ./dockersettings/gzip.conf:/etc/nginx/conf.d/gzip.conf
 
@@ -62,20 +64,27 @@ services:
   
   acme:
     image: custom-acme.sh:latest
-    command: /wait && /bin/bash /acme.sh --issue -d sungryeol.xyz -d www.sungryeol.xyz -d api.sungryeol.xyz
+    command: /wait && /bin/sh /acme.sh --issue --nginx -d sungryeol.xyz -d www.sungryeol.xyz -d api.sungryeol.xyz --reloadcmd "service nginx force-reload"
     volumes:
       - ./dockersettings/dhparam:/etc/nginx/dhparam
       - nginx-vhost:/etc/nginx/vhost.d # for letsencrypt
       - nginx-certs:/etc/nginx/certs # for letsencrypt
-      - nginx-conf:/etc/nginx/conf.d
+      - nginx-conf-d:/etc/nginx/conf.d
+      - nginx-conf:/etc/nginx/nginx.conf
     environment:
       - WAIT_HOSTS=api:4000, frontend:3000, nginx-proxy:80
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
 
 volumes:
   db-mongo:
   nginx-vhost:
   nginx-certs:
-  nginx-conf:
+  nginx-conf-d:
   html:
 
 # networks:
