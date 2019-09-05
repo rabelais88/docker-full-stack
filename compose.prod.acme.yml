@@ -62,8 +62,7 @@ services:
   
   acme:
     image: custom-acme.sh:latest
-    command:
-      - /wait && /bin/bash /acme.sh --issue -d sungryeol.xyz -d www.sungryeol.xyz -d api.sungryeol.xyz
+    command: /wait && /bin/bash /acme.sh --issue -d sungryeol.xyz -d www.sungryeol.xyz -d api.sungryeol.xyz
     volumes:
       - ./dockersettings/dhparam:/etc/nginx/dhparam
       - nginx-vhost:/etc/nginx/vhost.d # for letsencrypt
