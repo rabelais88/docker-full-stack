@@ -17,8 +17,6 @@ services:
       - nginx-conf:/etc/nginx/conf.d
       # - ./dockersettings/vhost.d/127.0.0.1.xip.io:/etc/nginx/vhost.d/127.0.0.1.xip.io
       # - ./dockersettings/gzip.conf:/etc/nginx/conf.d/gzip.conf
-    labels:
-      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
 
   frontend:
     init: true
@@ -26,10 +24,9 @@ services:
     ports:
       - 3000:3000
     environment:
-      - VIRTUAL_HOST=sungryeol.xyz
-      - LETSENCRYPT_HOST=sungryeol.xyz
+      - VIRTUAL_HOST=sungryeol.xyz,www.sungryeol.xyz
       - VIRUTAL_PORT=3000
-      - API_URL=api.sungryeol.xyz
+      - REACT_APP_API_URL=api.sungryeol.xyz
     # healthcheck:
     #   test: curl -f http://127.0.0.1:3000
 
@@ -56,7 +53,6 @@ services:
     init: true
     environment:
       - VIRTUAL_HOST=api.sungryeol.xyz
-      - LETSENCRYPT_HOST=api.sungryeol.xyz
       - VIRUTAL_PORT=4000
       - MONGO_URI=db:27017  # use container name for network
       - MONGO_USERNAME=root
@@ -64,25 +60,16 @@ services:
     # healthcheck:
     #   test: curl -f http://127.0.0.1:4000
   
-  nginx-letsencrypt:
-    # image: jrcs/letsencrypt-nginx-proxy-companion
-    image: nginx-letsencrypt:latest
+  acme:
+    image: custom-acme.sh:latest
+    command:
+      - /wait && /bin/bash /acme.sh --issue -d sungryeol.xyz -d www.sungryeol.xyz -d api.sungryeol.xyz
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - html:/usr/share/nginx/html
+      - ./dockersettings/dhparam:/etc/nginx/dhparam
       - nginx-vhost:/etc/nginx/vhost.d # for letsencrypt
-      - nginx-certs:/etc/nginx/certs:rw # for letsencrypt
-    environment:
-      - DEFAULT_EMAIL=sungryeolp@gmail.com
-      - NGINX_PROXY_CONTAINER=nginx-proxy
-      # - LETSENCRYPT_TEST=true # after testing, remove this
-      - LETSENCRYPT_RESTART_CONTAINER=true
-      # - DEBUG=true
-      - WAIT_HOSTS=api:4000, frontend:3000, nginx-proxy:80
-      # NOT NECESSARY
-      - ACME_CA_URI=https://acme-v02.api.letsencrypt.org/directory # official
-      # - ACME_CA_URI=https://acme-staging-v02.api.letsencrypt.org/directory # avoid 5cert/week/domain limit
-      # - NGINX_DOCKER_GEN_CONTAINER=nginx-proxy-gen
+      - nginx-certs:/etc/nginx/certs # for letsencrypt
+      - nginx-conf:/etc/nginx/conf.d
+
 
 volumes:
   db-mongo:
