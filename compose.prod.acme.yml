@@ -68,7 +68,8 @@ services:
       - nginx-vhost:/etc/nginx/vhost.d # for letsencrypt
       - nginx-certs:/etc/nginx/certs # for letsencrypt
       - nginx-conf:/etc/nginx/conf.d
-
+    environment:
+      - WAIT_HOSTS=api:4000, frontend:3000, nginx-proxy:80
 
 volumes:
   db-mongo:
