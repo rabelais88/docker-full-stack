@@ -84,6 +84,7 @@ volumes:
   db-mongo:
   nginx-vhost:
   nginx-certs:
+  nginx-conf:
   nginx-conf-d:
   html:
 
