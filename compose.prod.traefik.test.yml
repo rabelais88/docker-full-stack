@@ -16,16 +16,16 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dockersettings/traefik.toml:/etc/traefik/traefik.toml
       - acme:/etc/traefik/acme
-    # environment:
-    #   WAIT_HOSTS: api:4000, frontend:3000
+    environment:
+      WAIT_HOSTS: api:4000, frontend:3000
     networks:
       - web
+    labels:
+      # - traefik.enable=true        
+      - traefik.frontend.rule=Host:traefik.sungryeol.xyz
+      - traefik.port=8080
+      - traefik.docker.network=${COMPOSE_PROJECT_NAME:-docker-full-stack}_web
     deploy:
-      labels:
-        # - traefik.enable=true        
-        - traefik.frontend.rule=Host:traefik.sungryeol.xyz
-        - traefik.port=8080
-        - traefik.docker.network=${COMPOSE_PROJECT_NAME:-docker-full-stack}_web
       placement:
         constraints: [node.role == manager]
 
