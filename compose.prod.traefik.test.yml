@@ -6,8 +6,8 @@ services:
 
   traefik:
     # image: traefik:v2.0 # entrypoint is not available since 2.0 and not really sure how to use it
-    # image: traefik:latest
-    image: traefik-prepped:latest
+    image: traefik:latest
+    # image: traefik-prepped:latest
     ports:
       - 80:80
       - 443:443
@@ -16,8 +16,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dockersettings/traefik.toml:/etc/traefik/traefik.toml
       - acme:/etc/traefik/acme
-    environment:
-      WAIT_HOSTS: api:4000, frontend:3000
+    # environment:
+    #   WAIT_HOSTS: api:4000, frontend:3000
     networks:
       - web
     deploy:
