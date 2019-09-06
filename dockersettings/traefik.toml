@@ -57,7 +57,8 @@ address = ":8080"
 # Docker server endpoint. Can be a tcp or a unix socket endpoint.
 endpoint = "unix:///var/run/docker.sock"
 # Default domain used.
-domain = "sungryeol.xyz"
+# domain = "sungryeol.xyz"
+domain = "traefik"
 
 # Can be overridden by setting the "traefik.domain" label on a container.
 # domain = "YOUR_DEFAULT_DOMAIN"
