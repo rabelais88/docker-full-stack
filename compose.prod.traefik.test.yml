@@ -25,9 +25,9 @@ services:
       - traefik.frontend.rule=Host:traefik.sungryeol.xyz
       - traefik.port=8080
       - traefik.docker.network=${COMPOSE_PROJECT_NAME:-docker-full-stack}_web
-    # deploy:
-    #   placement:
-    #     constraints: [node.role == manager]
+    deploy:
+      placement:
+        constraints: [node.role == manager]
 
   frontend:
     init: true
