@@ -43,20 +43,7 @@ entryPoint = "https"
 
 [[acme.domains]]
   main = "sungryeol.xyz"
-# [[acme.domains]]
-#   main = "www.sungryeol.xyz"
-# [[acme.domains]]
-#   main = "api.sungryeol.xyz"
-# [[acme.domains]]
-#   main = "traefik.sungryeol.xyz"
   sans = ["sungryeol.xyz", "www.sungryeol.xyz", "api.sungryeol.xyz"]
-# [[acme.domains]]
-#   main = "local2.com"
-#   sans = ["test1.local2.com", "test2x.local2.com"]
-# [[acme.domains]]
-#   main = "local3.com"
-# [[acme.domains]]
-#   main = "local4.com"
 
 # REMOVE this section if you don't want the dashboard/API
 [api]
@@ -79,3 +66,4 @@ watch = true
 # Expose containers by default in traefik
 # If set to false, containers that don't have `traefik.enable=true` will be ignored
 exposedbydefault = false
+swarmMode = true
