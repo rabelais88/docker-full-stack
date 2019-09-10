@@ -6,6 +6,7 @@ COPY api/package.json api/yarn.lock ./
 # COPY dockersettings/wait-for-it.sh ./
 RUN yarn install
 COPY api/. .
+RUN apk --no-cache add curl
 EXPOSE 4000:4000
 # ENTRYPOINT ["/sbin/tini", "--"]
 # CMD . ./wait-for-it.sh db:27017 -- node server.js # this doesn't work properly maybe because of ID and PASS?

@@ -9,6 +9,7 @@ ENV REACT_APP_API_URL https://api.sungryeol.xyz
 RUN yarn build
 
 FROM node:12.9.0-alpine
+RUN apk --no-cache add curl
 RUN mkdir /node/myapp -p
 WORKDIR /node/myapp
 COPY --from=dependency /node/myapp/node_modules/. ./node_modules/

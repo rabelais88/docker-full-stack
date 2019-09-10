@@ -42,7 +42,6 @@ if (mongoUsername) {
   connectOptions.pass = mongoPassword;
 }
 
-
 const _procMain = async () => {
   try {
     console.log(`> db connection to ${mongoUri} by ${mongoUsername}`);
@@ -58,4 +57,7 @@ const _procMain = async () => {
   }
 };
 
-_procMain();
+if (process.env.NODE_ENV !== 'test') {
+  _procMain();
+}
+module.exports = app;
