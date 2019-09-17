@@ -19,10 +19,20 @@ http:
       loadBalancer:
         servers:
           - url: "http://sr-frontend:3000"
+        healthCheck:
+          path: /
+          hostname: http://sr-frontend
+          port: 3000
+          interval: 3s
     sr-api-service:
       loadBalancer:
         servers:
           - url: "http://sr-api:4000"
+        healthCheck:
+          path: /
+          hostname: http://sr-api
+          port: 4000
+          interval: 3s
   routers:
     sr-frontend-router:
       rule: "Host(`sungryeol.xyz`) || Host(`www.sungryeol.xyz`)"

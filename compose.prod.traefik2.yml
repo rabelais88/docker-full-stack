@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   sr-traefik:
-    image: traefik-v2:latest
+    image: traefik:latest
     volumes:
       - ./dockersettings/traefik.yml:/etc/traefik/traefik.yml # v2 settings
       - /var/run/docker.sock:/var/run/docker.sock
@@ -10,8 +10,8 @@ services:
       - 80:80
       - 443:443
       - 8080:8080
-    environment:
-      - WAIT_HOSTS=sr-api:4000, sr-frontend:3000
+    # environment:
+    #   - WAIT_HOSTS=sr-api:4000, sr-frontend:3000
   sr-frontend:
     init: true
     image: frontend:latest
