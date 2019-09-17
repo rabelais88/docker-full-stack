@@ -1,4 +1,6 @@
 # traefik v2 settings
+log:
+  level: DEBUG
 api:
   insecure: true
 providers:
@@ -18,7 +20,11 @@ http:
     sr-frontend-service:
       loadBalancer:
         servers:
-          - address: "sr-frontend:3000"
+          - url: "http://sr-frontend:3000"
+      loadbalancer:
+        server:
+          port:
+            - 3000
         healthCheck:
           path: /
           hostname: sr-frontend
@@ -27,7 +33,11 @@ http:
     sr-api-service:
       loadBalancer:
         servers:
-          - address: "sr-api:4000"
+          - url: "http://sr-api:4000"
+      loadbalancer:
+        server:
+          port:
+            - 4000
         healthCheck:
           path: /
           hostname: sr-api
@@ -72,7 +82,7 @@ certificatesResolvers:
       email: sungryeolp@gmail.com
       httpChallenge:
         entryPoint: web
-        # tlsChallenge: {}
+        tlsChallenge: true
       dnsChallenge:
         provider: vultr
         delayBeforeCheck: 0

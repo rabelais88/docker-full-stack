@@ -6,6 +6,7 @@ services:
       - ./dockersettings/traefik.yml:/etc/traefik/traefik.yml # v2 settings
       - /var/run/docker.sock:/var/run/docker.sock
       - acme:/etc/traefik/acme
+      - ./letsencrypt:/letsencrypt
     ports:
       - 80:80
       - 443:443
@@ -28,7 +29,6 @@ services:
     
   db:
     image: mongo:4.2.0-bionic
-    restart: always
     ports:
       - 27017:27017
     environment:
@@ -40,7 +40,6 @@ services:
   sr-api:
     image: api:latest
     init: true
-    restart: on-failure
     ports:
       - 4000:4000
     environment:
