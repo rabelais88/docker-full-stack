@@ -55,6 +55,6 @@ services:
     #     - traefik.https.routers.sr-api-router-https.tls={}
     #     # - traefik.http.services.sr-api-service=loadBalancer.servers.port=4000
   
-  volumes:
-    db-mongo:
-    acme:
+volumes:
+  db-mongo:
+  acme:
