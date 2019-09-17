@@ -18,19 +18,19 @@ http:
     sr-frontend-service:
       loadBalancer:
         servers:
-          - url: "http://sr-frontend:3000"
+          - address: "sr-frontend:3000"
         healthCheck:
           path: /
-          hostname: http://sr-frontend
+          hostname: sr-frontend
           port: 3000
           interval: 3s
     sr-api-service:
       loadBalancer:
         servers:
-          - url: "http://sr-api:4000"
+          - address: "sr-api:4000"
         healthCheck:
           path: /
-          hostname: http://sr-api
+          hostname: sr-api
           port: 4000
           interval: 3s
   routers:
@@ -72,7 +72,7 @@ certificatesResolvers:
       email: sungryeolp@gmail.com
       httpChallenge:
         entryPoint: web
-        tlsChallenge: {}
+        # tlsChallenge: {}
       dnsChallenge:
         provider: vultr
         delayBeforeCheck: 0
