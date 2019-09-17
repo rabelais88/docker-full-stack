@@ -11,7 +11,7 @@ services:
     ports:
       - 80:80
       - 443:443
-      - 8080:8080
+      # - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dockersettings/traefik.toml:/etc/traefik/traefik.toml
@@ -20,14 +20,16 @@ services:
       WAIT_HOSTS: api:4000, frontend:3000
     networks:
       - web
+      - internal
     labels:
       # - traefik.enable=true        
       - traefik.frontend.rule=Host:traefik.sungryeol.xyz
       - traefik.port=8080
-      - traefik.docker.network=${COMPOSE_PROJECT_NAME:-docker-full-stack}_web
-    deploy:
-      placement:
-        constraints: [node.role == manager]
+      # - traefik.docker.network=${COMPOSE_PROJECT_NAME:-docker-full-stack}_web
+      - traefik.docker.network=web
+    # deploy:
+    #   placement:
+    #     constraints: [node.role == manager]
 
   frontend:
     init: true
@@ -38,13 +40,15 @@ services:
     #   - REACT_APP_API_URL=api.sungryeol.xyz
     networks:
       - web
+      - internal
     labels:
       - traefik.enable=true
       - traefik.port=3000
       - traefik.frontend.rule=Host:sungryeol.xyz,www.sungryeol.xyz
       - REACT_APP_API_URL=api.sungryeol.xyz
-      - traefik.docker.network=${COMPOSE_PROJECT_NAME:-docker-full-stack}_web
+      # - traefik.docker.network=${COMPOSE_PROJECT_NAME:-docker-full-stack}_web
       - traefik.backend=sungryeol-frontend
+      - traefik.docker.network=web
 
   db:
     image: mongo:4.2.0-bionic
@@ -58,6 +62,7 @@ services:
       - db-mongo:/data/db
     networks:
       - web
+      - internal
 
   api:
     image: api:latest
@@ -73,19 +78,20 @@ services:
       - traefik.enable=true
       - traefik.port=4000
       - traefik.frontend.rule=Host:api.sungryeol.xyz
-      - traefik.docker.network=${COMPOSE_PROJECT_NAME:-docker-full-stack}_web
+      # - traefik.docker.network=${COMPOSE_PROJECT_NAME:-docker-full-stack}_web
       - traefik.backend=sungryeol-api
+      - traefik.docker.network=web
     networks:
       - web
+      - internal
 
 volumes:
   db-mongo:
   acme:
-    driver: rexray/dobs
-    driver_opts:
-      size: 1
 
 networks:
   web:
     driver: overlay
     name: web
+  internal:
+    external: false

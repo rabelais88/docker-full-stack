@@ -38,7 +38,7 @@ onDemand = false
 OnHostRule = true
 acmeLogging = true
 entryPoint = "https"
-[acme.tlsChallenge]
+[acme.tlsChallenge] # for tls-alpn-01 challenge
 [acme.httpChallenge]
   entryPoint = "http"
 
@@ -58,8 +58,7 @@ address = ":8080"
 # Docker server endpoint. Can be a tcp or a unix socket endpoint.
 endpoint = "unix:///var/run/docker.sock"
 # Default domain used.
-# domain = "sungryeol.xyz"
-domain = "traefik"
+domain = "sungryeol.xyz"
 
 # Can be overridden by setting the "traefik.domain" label on a container.
 # domain = "YOUR_DEFAULT_DOMAIN"
