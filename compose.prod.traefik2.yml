@@ -18,14 +18,15 @@ services:
     image: frontend:latest
     ports:
       - 3000:3000
-    # deploy:
-    #   labels:
-    #     - traefik.http.routers.sr-frontend-router-http.rule=Host(`sungryeol.xyz`)
-    #     - traefik.http.routers.sr-frontend-router-http.middlewares=sr-https-redirectscheme
-    #     - traefik.http.routers.sr-frontend-router-https.rule=Host(`sungryeol.xyz`)
-    #     - traefik.http.routers.sr-frontend-router-https.tls={}
-    #     - traefik.http.services.sr-frontend-service.loadBalancer.servers
-    #     # - traefik.http.services.sr-frontend-service.loadBalancer.servers.port=3000
+    deploy:
+      labels:
+        - traefik.http.services.sr-frontend-service.loadBalancer.servers.port=3000
+        - traefik.http.routers.sr-frontend-router-http
+        - traefik.http.routers.sr-frontend-router-http.rule=Host(`sungryeol.xyz`)
+        - traefik.http.routers.sr-frontend-router-http.middlewares=sr-https-redirectscheme
+        - traefik.http.routers.sr-frontend-router-https.rule=Host(`sungryeol.xyz`)
+        - traefik.http.routers.sr-frontend-router-https.tls={}
+
     
   db:
     image: mongo:4.2.0-bionic
@@ -46,13 +47,15 @@ services:
       - MONGO_URI=db:27017  # use container name for network
       - MONGO_USERNAME=root
       - MONGO_PASSWORD=example
-    # deploy:
-    #   labels:
-    #     - traefik.http.routers.sr-api-router-http.rule=Host(`api.sungryeol.xyz`)
-    #     - traefik.http.routers.sr-api-router-http.middlewares=sr-https-redirectscheme
-    #     - traefik.https.routers.sr-api-router-https.rule=Host(`api.sungryeol.xyz`)
-    #     - traefik.https.routers.sr-api-router-https.tls={}
-    #     # - traefik.http.services.sr-api-service=loadBalancer.servers.port=4000
+    deploy:
+      labels:
+        - traefik.http.services.sr-api-service=loadBalancer.servers.port=4000
+        - traefik.http.routers.sr-api-router-http
+        - traefik.http.routers.sr-api-router-http.rule=Host(`api.sungryeol.xyz`)
+        - traefik.http.routers.sr-api-router-http.middlewares=sr-https-redirectscheme
+        - traefik.https.routers.sr-api-router-https.rule=Host(`api.sungryeol.xyz`)
+        - traefik.https.routers.sr-api-router-https.tls={}
+
   
 volumes:
   db-mongo:

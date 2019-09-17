@@ -21,10 +21,6 @@ http:
       loadBalancer:
         servers:
           - url: "http://sr-frontend:3000"
-      loadbalancer:
-        server:
-          port:
-            - 3000
         healthCheck:
           path: /
           hostname: sr-frontend
@@ -34,10 +30,6 @@ http:
       loadBalancer:
         servers:
           - url: "http://sr-api:4000"
-      loadbalancer:
-        server:
-          port:
-            - 4000
         healthCheck:
           path: /
           hostname: sr-api
