@@ -17,8 +17,8 @@ defaultEntryPoints = ["http", "https"]
 [entryPoints]
   [entryPoints.http]
     address = ":80"
-    [entryPoints.http.redirect]
-    entryPoint = "https"
+    # [entryPoints.http.redirect] # this may be the reason for timeout
+    # entryPoint = "https"
   [entryPoints.https]
     address = ":443"
   [entryPoints.https.tls]
@@ -38,7 +38,8 @@ onDemand = false
 OnHostRule = true
 acmeLogging = true
 entryPoint = "https"
-  [acme.httpChallenge]
+[acme.tlsChallenge]
+[acme.httpChallenge]
   entryPoint = "http"
 
 [[acme.domains]]
