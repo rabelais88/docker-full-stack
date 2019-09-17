@@ -1,0 +1,69 @@
+# traefik v2 settings
+api:
+  insecure: true
+providers:
+  docker:
+    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
+    # swarm classic (1.12-)
+    # endpoint = "tcp://127.0.0.1:2375"
+    # docker swarm mode (1.12+)
+    swarmMode: true
+    endpoint: "unix:///var/run/docker.sock"
+http:
+  middlewares:
+    sr-https-redirectscheme:
+      redirectScheme:
+        scheme: https
+  services:
+    sr-frontend-service:
+      loadBalancer:
+        servers:
+          - url: "http://sr-frontend:3000"
+    sr-api-service:
+      loadBalancer:
+        servers:
+          - url: "http://sr-api:4000"
+  routers:
+    sr-frontend-router:
+      rule: "Host(`sungryeol.xyz`) || Host(`www.sungryeol.xyz`)"
+      service: sr-frontend-service
+      tls:
+        certResolver: sr-cert
+      # domains:
+      #   - main: "sungryeol.xyz"
+      #     sans: "*.sungryeol.xyz"
+    sr-frontend-router-http:
+      rule: "Host(`sungryeol.xyz`) || Host(`www.sungryeol.xyz`)"
+      service: sr-frontend-service
+      middlewares: sr-https-redirectscheme
+    sr-api-router-https:
+      rule: "Host(`api.sungryeol.xyz`)"
+      service: sr-api-service
+      tls:
+        certResolver: sr-cert
+      # domains:
+      #   - main: "sungryeol.xyz"
+      #     sans: "*.sungryeol.xyz"
+    sr-api-router-http:
+      rule: "Host(`api.sungryeol.xyz`)"
+      service: sr-api-service
+      middlewares: sr-https-redirectscheme
+
+entryPoints:
+  web:
+    address: :80
+  web-secure:
+    address: :443
+
+certificatesResolvers:
+  sr-cert:
+    acme:
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      email: sungryeolp@gmail.com
+      httpChallenge:
+        entryPoint: web
+        tlsChallenge: {}
+      dnsChallenge:
+        provider: vultr
+        delayBeforeCheck: 0
+      storage: acme.json
