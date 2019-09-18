@@ -21,11 +21,13 @@ services:
     deploy:
       labels:
         - traefik.http.services.sr-frontend-service.loadBalancer.servers.port=3000
-        - traefik.http.routers.sr-frontend-router-http
+        - traefik.http.routers.sr-frontend-router-http.service=sr-frontend-service
+        - traefik.http.routers.sr-frontend-router-http.entryPoints=web
         - traefik.http.routers.sr-frontend-router-http.rule=Host(`sungryeol.xyz`)
-        - traefik.http.routers.sr-frontend-router-http.middlewares=sr-https-redirectscheme
+        - traefik.http.routers.sr-frontend-router-https.service=sr-frontend-service
+        - traefik.http.routers.sr-frontend-router-https.entryPoints=web-secure
         - traefik.http.routers.sr-frontend-router-https.rule=Host(`sungryeol.xyz`)
-        - traefik.http.routers.sr-frontend-router-https.tls={}
+        - traefik.http.routers.sr-frontend-router-https.tls.certResolver=sr-cert
 
     
   db:
@@ -50,11 +52,13 @@ services:
     deploy:
       labels:
         - traefik.http.services.sr-api-service=loadBalancer.servers.port=4000
-        - traefik.http.routers.sr-api-router-http
+        - traefik.http.routers.sr-api-router-http.service=sr-api-service
+        - traefik.http.routers.sr-api-router-http.entryPoints=web
         - traefik.http.routers.sr-api-router-http.rule=Host(`api.sungryeol.xyz`)
-        - traefik.http.routers.sr-api-router-http.middlewares=sr-https-redirectscheme
-        - traefik.https.routers.sr-api-router-https.rule=Host(`api.sungryeol.xyz`)
-        - traefik.https.routers.sr-api-router-https.tls={}
+        - traefik.http.routers.sr-api-router-https.service=sr-api-service
+        - traeifk.http.routers.sr-api-router-https.entryPoints=web-secure
+        - traefik.http.routers.sr-api-router-https.rule=Host(`api.sungryeol.xyz`)
+        - traefik.http.routers.sr-frontend-router-https.tls.certResolver=sr-cert
 
   
 volumes:

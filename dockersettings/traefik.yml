@@ -1,6 +1,6 @@
 # traefik v2 settings
-log:
-  level: DEBUG
+# log:
+#   level: DEBUG
 api:
   insecure: true
 providers:
@@ -12,54 +12,54 @@ providers:
     swarmMode: true
     endpoint: "unix:///var/run/docker.sock"
 http:
-  middlewares:
-    sr-https-redirectscheme:
-      redirectScheme:
-        scheme: https
-  services:
-    sr-frontend-service:
-      loadBalancer:
-        servers:
-          - url: "http://sr-frontend:3000"
-        healthCheck:
-          path: /
-          hostname: sr-frontend
-          port: 3000
-          interval: 3s
-    sr-api-service:
-      loadBalancer:
-        servers:
-          - url: "http://sr-api:4000"
-        healthCheck:
-          path: /
-          hostname: sr-api
-          port: 4000
-          interval: 3s
-  routers:
-    sr-frontend-router:
-      rule: "Host(`sungryeol.xyz`) || Host(`www.sungryeol.xyz`)"
-      service: sr-frontend-service
-      tls:
-        certResolver: sr-cert
-      # domains:
-      #   - main: "sungryeol.xyz"
-      #     sans: "*.sungryeol.xyz"
-    sr-frontend-router-http:
-      rule: "Host(`sungryeol.xyz`) || Host(`www.sungryeol.xyz`)"
-      service: sr-frontend-service
-      middlewares: sr-https-redirectscheme
-    sr-api-router-https:
-      rule: "Host(`api.sungryeol.xyz`)"
-      service: sr-api-service
-      tls:
-        certResolver: sr-cert
-      # domains:
-      #   - main: "sungryeol.xyz"
-      #     sans: "*.sungryeol.xyz"
-    sr-api-router-http:
-      rule: "Host(`api.sungryeol.xyz`)"
-      service: sr-api-service
-      middlewares: sr-https-redirectscheme
+  # middlewares:
+  #   sr-https-redirectscheme:
+  #     redirectScheme:
+  #       scheme: https
+  # services:
+  #   sr-frontend-service:
+  #     loadBalancer:
+  #       servers:
+  #         - url: "http://sr-frontend:3000"
+  #       healthCheck:
+  #         path: /
+  #         hostname: sr-frontend
+  #         port: 3000
+  #         interval: 3s
+  #   sr-api-service:
+  #     loadBalancer:
+  #       servers:
+  #         - url: "http://sr-api:4000"
+  #       healthCheck:
+  #         path: /
+  #         hostname: sr-api
+  #         port: 4000
+  #         interval: 3s
+  # routers:
+  #   sr-frontend-router:
+  #     rule: "Host(`sungryeol.xyz`) || Host(`www.sungryeol.xyz`)"
+  #     service: sr-frontend-service
+  #     tls:
+  #       certResolver: sr-cert
+  #     # domains:
+  #     #   - main: "sungryeol.xyz"
+  #     #     sans: "*.sungryeol.xyz"
+  #   sr-frontend-router-http:
+  #     rule: "Host(`sungryeol.xyz`) || Host(`www.sungryeol.xyz`)"
+  #     service: sr-frontend-service
+  #     middlewares: sr-https-redirectscheme
+  #   sr-api-router-https:
+  #     rule: "Host(`api.sungryeol.xyz`)"
+  #     service: sr-api-service
+  #     tls:
+  #       certResolver: sr-cert
+  #     # domains:
+  #     #   - main: "sungryeol.xyz"
+  #     #     sans: "*.sungryeol.xyz"
+  #   sr-api-router-http:
+  #     rule: "Host(`api.sungryeol.xyz`)"
+  #     service: sr-api-service
+  #     middlewares: sr-https-redirectscheme
 
 entryPoints:
   web:
