@@ -1,11 +1,11 @@
 FROM node:12.9.0-alpine
 # RUN apk add --no-cache tini
-RUN mkdir /homde/node/app -p
+RUN mkdir /home/node/app -p
 WORKDIR /home/node/app
-COPY api/package.json api/yarn.lock ./
+COPY ./package.json api/yarn.lock ./
 # COPY dockersettings/wait-for-it.sh ./
 RUN yarn install
-COPY api/. .
+COPY . .
 RUN apk --no-cache add curl
 EXPOSE 4000:4000
 # ENTRYPOINT ["/sbin/tini", "--"]

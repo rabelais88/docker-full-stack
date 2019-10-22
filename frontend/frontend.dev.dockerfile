@@ -1,6 +1,6 @@
 FROM node:12.9.0-stretch as dependency
 RUN mkdir /node/myapp -p
-COPY frontend/package.json frontend/yarn.lock /node/myapp/
+COPY ./package.json ./yarn.lock /node/myapp/
 WORKDIR /node/myapp
 RUN yarn install
 

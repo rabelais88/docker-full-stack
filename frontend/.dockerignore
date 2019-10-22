@@ -1,0 +1,3 @@
+*.log
+frontend.dev.dockerfile
+frontend.prod.dockerfile
