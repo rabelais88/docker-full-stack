@@ -8,7 +8,31 @@ services:
     ports:
       - "80:80"
       - "8080:8080" # dashboard
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: frontend.prod.dockerfile
+    deploy: # specify configuration for services(not container)
+      labels: 
+        - traefik.http.routers.proxy-traefik.rule=Host('traefik.127.0.0.1.xip.io')
+        - traefik.http.services.proxy-traefik.loadbalancer.server.port=8080
+        # - traefik.docker.network=web-internal
+    networks:
+      - web-internal
+
+  front:
+    image: test-app-dev_front:latest
+    # ports:
+    #   - "3000:3000"
+    deploy:
+      labels:
+        - traefik.http.routers.web-traefik.rule=Host('127.0.0.1.xip.io')
+        - traefik.http.services.web-traefik.loadbalancer.server.port=3000
+        # - traefik.docker.network=web-internal
+    volumes:
+      - "./frontend/src:/node/myapp/src"
+      - "./frontend/public:/node/myapp/public"
+    networks:
+      - web-internal
+
+networks:
+  web-internal:
+    driver: overlay # allows contact different nodes
+volumes:
+  front-node_modules:

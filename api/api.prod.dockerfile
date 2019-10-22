@@ -2,7 +2,7 @@ FROM node:12.9.0-alpine
 # RUN apk add --no-cache tini
 RUN mkdir /home/node/app -p
 WORKDIR /home/node/app
-COPY ./package.json api/yarn.lock ./
+COPY ./package.json ./yarn.lock ./
 # COPY dockersettings/wait-for-it.sh ./
 RUN yarn install
 COPY . .

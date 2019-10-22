@@ -5,7 +5,7 @@ WORKDIR /node/myapp
 RUN yarn install --production=true
 COPY ./public/. ./public/
 COPY ./src/. ./src/
-ENV REACT_APP_API_URL https://api.sungryeol.xyz
+ENV REACT_APP_API_URL "https://api.sungryeol.xyz"
 RUN yarn build
 
 FROM node:12.9.0-alpine
