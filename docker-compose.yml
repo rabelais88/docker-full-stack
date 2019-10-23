@@ -3,7 +3,7 @@ services:
   proxy-traefik:
     image: traefik:latest
     volumes:
-      - "./traefik/treafik.yaml:/etc/traefik"
+      - "./traefik/traefik.yaml:/etc/traefik.yaml"
       - "/var/run/docker.sock:/var/run/docker.sock"
     ports:
       - "80:80"
