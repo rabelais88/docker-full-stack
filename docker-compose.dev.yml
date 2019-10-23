@@ -25,7 +25,7 @@ services:
     deploy:
       labels:
         - traefik.http.routers.web-traefik.rule=Host('127.0.0.1.xip.io')
-        - traefik.http.routers.proxy-traefik.entrypoints=web # open to :80,443
+        - traefik.http.routers.web-traefik.entrypoints=web # open to :80,443
         - traefik.http.services.web-traefik.loadbalancer.server.port=3000
         - traefik.docker.network=web-internal
         - traefik.enable=true
