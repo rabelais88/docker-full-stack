@@ -12,9 +12,9 @@ services:
       - "8080:8080" # dashboard
     deploy: # specify configuration for services(not container)
       labels: 
-        - traefik.http.routers.proxy-traefik.rule=Host(`traefik.127.0.0.1.xip.io`) # must use backtick(`) instead of single quote(') - GoLang's feature
-        - traefik.http.services.proxy-traefik.loadbalancer.server.port=8080
-        - traefik.docker.network=web-internal
+        - traefik.http.routers.proxy-testapp.rule=Host(`traefik.127.0.0.1.xip.io`) # must use backtick(`) instead of single quote(') - GoLang's feature
+        - traefik.http.services.proxy-testapp.loadbalancer.server.port=8080
+        # - traefik.docker.network=web-internal
       placement:
         constraints:
           - node.role == manager
@@ -29,16 +29,32 @@ services:
       - "3000:3000"
     deploy:
       labels:
-        - traefik.http.routers.web-traefik.rule=Host(`127.0.0.1.xip.io`)
-        - traefik.http.routers.web-traefik.entrypoints=web # open to :80,443
-        - traefik.http.services.web-traefik.loadbalancer.server.port=3000
-        - traefik.docker.network=web-internal
+        - traefik.http.routers.web-testapp.rule=Host(`127.0.0.1.xip.io`)
+        - traefik.http.routers.web-testapp.entrypoints=web # open to :80
+        - traefik.http.services.web-testapp.loadbalancer.server.port=3000
+        # - traefik.docker.network=web-internal
         - traefik.enable=true
     volumes:
       - "./frontend/src:/node/myapp/src"
       - "./frontend/public:/node/myapp/public"
     networks:
       - web-internal
+  
+  # api:
+  #   image: test-app-dev_back:latest
+  #   # ports: # FOR DEBUG PURPOSE - must be disabled in PROD
+  #   #   - "4000:4000"
+  #   deploy:
+  #     labels:
+  #       - traefik.http.routers.api-testapp.rule=Host(`api.127.0.0.1.xip.io`)
+  #       - traefik.http.routers.api-testapp.entrypoints=web
+  #       - traefik.http.services.api-testapp.loadbalancer.server.port=4000
+  #       - traefik.enable=true
+  #   networks:
+  #     - web-internal
+  #       # - traefik.docker.network=web-interal
+  # db:
+  #   image: mongodb:latest
 
 networks:
   web-internal:
