@@ -4,7 +4,7 @@ services:
   proxy-traefik:
     image: traefik:latest
     volumes:
-      - "./traefik/traefik.dev.yaml:/etc/traefik.yaml"
+      - "./traefik/traefik.dev.yaml:/etc/traefik/traefik.yaml" # without proper directory, it'll show no logs
       - "/var/run/docker.sock:/var/run/docker.sock"
     ports:
       - "80:80"
@@ -12,9 +12,14 @@ services:
       - "8080:8080" # dashboard
     deploy: # specify configuration for services(not container)
       labels: 
-        - traefik.http.routers.proxy-traefik.rule=Host('traefik.127.0.0.1.xip.io')
+        - traefik.http.routers.proxy-traefik.rule=Host(`traefik.127.0.0.1.xip.io`) # must use backtick(`) instead of single quote(') - GoLang's feature
         - traefik.http.services.proxy-traefik.loadbalancer.server.port=8080
         - traefik.docker.network=web-internal
+      placement:
+        constraints:
+          - node.role == manager
+        preferences:
+          - spread: node.id
     networks:
       - web-internal
 
@@ -24,7 +29,7 @@ services:
       - "3000:3000"
     deploy:
       labels:
-        - traefik.http.routers.web-traefik.rule=Host('127.0.0.1.xip.io')
+        - traefik.http.routers.web-traefik.rule=Host(`127.0.0.1.xip.io`)
         - traefik.http.routers.web-traefik.entrypoints=web # open to :80,443
         - traefik.http.services.web-traefik.loadbalancer.server.port=3000
         - traefik.docker.network=web-internal
@@ -37,7 +42,8 @@ services:
 
 networks:
   web-internal:
+    name: web-internal
     driver: overlay # allows contact different nodes
-    attachable: true # outside container can be attached to this network
+    # attachable: true # outside container can be attached to this network
 volumes:
   front-node_modules:
