@@ -1,0 +1,5 @@
+providers:
+  docker:
+    # endpoint: "tcp://127.0.0.1:2375"
+    endpoint: "unix:///var/run/docker.sock"
+    swarmMode: true

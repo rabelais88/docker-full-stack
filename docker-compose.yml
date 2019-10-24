@@ -1,0 +1,31 @@
+version: '3'
+services:
+  proxy-traefik:
+    image: traefik:latest
+    volumes:
+      - "./traefik/traefik.yaml:/etc/traefik.yaml"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+      - "80:80"
+      - "8080:8080" # dashboard
+    deploy: # specify configuration for services(not container)
+      labels: 
+        - traefik.http.routers.proxy-traefik.rule=Host('127.0.0.1.xip.io')
+        - traefik.http.services.proxy-traefik.loadbalancer.server.port=8080
+    networks:
+      - web-internal
+
+  front:
+    image: test-app_front:latest
+    # ports:
+    #   - "3000:3000"
+    networks:
+      - web-internal
+    deploy:
+      labels:
+        - traefik.http.routers.web-traefik.rule=Host('127.0.0.1.xip.io')
+        - traefik.http.services.web-traefik.loadbalancer.server.port=3000
+
+networks:
+  web-internal:
+    driver: overlay # allows contact different nodes

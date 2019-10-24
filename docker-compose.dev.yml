@@ -1,0 +1,78 @@
+# https://docs.traefik.io/user-guides/docker-compose/basic-example/
+version: '3.7'
+services:
+  proxy-traefik:
+    image: traefik:latest # check dockerfile ENV before deploying
+    volumes:
+      - "./traefik/traefik.dev.yaml:/etc/traefik/traefik.yaml" # without proper directory, it'll show no logs
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+      - "80:80"
+      - "433:433"
+      - "8080:8080" # dashboard
+    deploy: # specify configuration for services(not container)
+      labels: 
+        - traefik.http.routers.proxy-testapp.rule=Host(`traefik.127.0.0.1.xip.io`) # must use backtick(`) instead of single quote(') - GoLang's feature
+        - traefik.http.services.proxy-testapp.loadbalancer.server.port=8080
+        - traefik.docker.network=web-internal
+      placement:
+        constraints:
+          - node.role == manager
+        preferences:
+          - spread: node.id
+    networks:
+      - web-internal
+
+  front:
+    image: test-app-dev_front:latest
+    # ports: # FOR DEBUG PURPOSE - must be disabled in PROD
+    #   - "3000:3000"
+    deploy:
+      labels:
+        - traefik.http.routers.web-testapp.rule=Host(`127.0.0.1.xip.io`)
+        - traefik.http.routers.web-testapp.entrypoints=web # open to :80
+        - traefik.http.services.web-testapp.loadbalancer.server.port=3000
+        - traefik.docker.network=web-internal
+        - traefik.enable=true
+    volumes:
+      - "./frontend/src:/node/myapp/src"
+      - "./frontend/public:/node/myapp/public"
+    networks:
+      - web-internal
+  
+  api:
+    image: test-app-dev_api:latest
+    # ports: # FOR DEBUG PURPOSE - must be disabled in PROD
+    #   - "4000:4000"
+    deploy:
+      labels:
+        - traefik.http.routers.api-testapp.rule=Host(`api.127.0.0.1.xip.io`)
+        - traefik.http.routers.api-testapp.entrypoints=web
+        - traefik.http.services.api-testapp.loadbalancer.server.port=4000
+        - traefik.enable=true
+    environment:
+      - "WHITELIST=127.0.0.1.xip.io,http://127.0.0.1.xip.io"
+      - MONGO_USERNAME=admin
+      - MONGO_PASSWORD=1234
+      - "MONGO_URI=mongodb:27017"
+    networks:
+      - web-internal
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=1234
+    volumes:
+      - "mongo-data:/data/db"
+    networks:
+      - web-internal
+
+networks:
+  web-internal:
+    name: web-internal
+    driver: overlay # allows contact different nodes
+    # attachable: true # outside container can be attached to this network
+volumes:
+  front-node_modules:
+  mongo-data:

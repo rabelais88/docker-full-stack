@@ -1,0 +1,19 @@
+providers:
+  docker:
+    # endpoint: "tcp://127.0.0.1:2375"
+    endpoint: "unix:///var/run/docker.sock"
+    swarmMode: true
+    network: test-app_web-internal
+
+api:
+  dashboard: true # must access it via url:${HOSTNAME}/dashboard/
+  insecure: true # only for dev mode
+  debug: true
+log:
+  level: DEBUG
+
+entryPoints:
+  web:
+    address: ":80"
+  web-secure:
+    address: ":443"

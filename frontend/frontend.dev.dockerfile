@@ -1,6 +1,6 @@
 FROM node:12.9.0-stretch as dependency
 RUN mkdir /node/myapp -p
-COPY frontend/package.json frontend/yarn.lock /node/myapp/
+COPY ./package.json ./yarn.lock /node/myapp/
 WORKDIR /node/myapp
 RUN yarn install
 
@@ -9,4 +9,6 @@ RUN mkdir /node/myapp -p
 COPY --from=dependency /node/myapp/. /node/myapp/
 WORKDIR /node/myapp
 EXPOSE 3000:3000
+# env is added via compose.build.args
+ENV REACT_APP_API_URL "http://api.127.0.0.1.xip.io"
 CMD node node_modules/.bin/react-scripts start
