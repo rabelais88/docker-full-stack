@@ -47,6 +47,9 @@ sh build-dev.sh
 docker stack deploy -c docker-compose.dev.yml test-app
 
 # production
+# creating secret
+echo "${MONGO_USERNAME}" | docker secret create testapp-mongo-username -
+echo "${MONGO_PASSWORD}" | docker secret create testapp-mongo-password -
 sh build-prod.sh
 docker stack deploy -c docker-compose.prod.yml test-app
 ```
