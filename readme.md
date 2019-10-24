@@ -1,53 +1,31 @@
 # full stack docker node.js app example with SSL
 
-# caveat
+## what I've learned in this
 - `nginx/proxy` has its own quirks, such as:
   - creating internal network may cause upstream error
   - gzip should be added separately
-- but really, `nginx/proxy` is simpler than using `traefik` or other reverse-proxy apps. because it has tons of documents online.
+- ~~but really, `nginx/proxy` is simpler than using `traefik` or other reverse-proxy apps. because it has tons of documents online.~~ `traefik` is ALWAYS RECOMMENDED for orchestration. maybe not so much for performance, but for the ease of deployment.
 - *dockerize* and *healthcheck* is trickier than expectation. and maybe not really necessary in some cases. if the app handles error alright, it is not necessary.
 - apps should implement its own healthcheck feature. using `curl` is not really a recommended option for health checking.
-- version 2.0 of `traefik` provies better document than the previous ones. but it lacks some crucial info about migration.
+- any app settings should be provided via environment values, not files.
+- version 2.0 of `traefik` provies better document than the previous ones.
 - ACME let's encrypt has [rate limit](https://letsencrypt.org/docs/rate-limits/). use [stage url](https://letsencrypt.org/docs/staging-environment/) for avoiding rate limit for development.
+- IMO, write development *docker-compose* file in `docker-swarm` style, not `docker-compose` style for development; the differences between two cause headache when writing production *docker-compose* file.
+- when setting up `traefik`, here are what to consider:
+  - if `traefik.yaml` is missing, `traefik` doesn't show any logs.
+  - both *http* and *https* host info should be provided for both(in `services.${APP}.deploy.labels`)
+  - all apps are interconnected w/o additional settings in `docker-swarm`. ports should be opened only for debugging purposes.(except `traefik` listening port)
+  - use `docker container logs ${container name}` for container logs, `docker stack ps ${APP_NAME} --no-trunc` for service logs. both provides different logs, so be aware.
+  - use backtick (&#96;) instead of ordinary single quote(') in `services.${APP}.deploy.labels`. *GoLang* has problem with reading single quoted strings.
+  - `traefik` service must be designated as manager node
+  - `driver:overlay` network is used for reaching separate nodes on different network: it may be not necessary, but can be used for scaling up in the future; use it if possible.
 
-# local test
-```bash
-. ./init-cert-dev.sh
-. ./build-n-stage.sh
-. ./stop-n-clean.sh
-```
+```sh
+# development
+sh build-dev.sh
+docker stack deploy -c docker-compose.dev.yml test-app
 
-# production deploy
-```bash
-. ./init-cert-prod.sh
-docker stack deploy -c compose.prod.test.yml ${stack name} # nginx
-docker stack deploy -c compose.prod.traefik.yml ${stack name} # traefik
-docker stack rm ${service name}
+# production
+sh build-prod.sh
+docker stack deploy -c docker-compose.prod.yml test-app
 ```
-
-# helpful links
-- https://github.com/jwilder/nginx-proxy
-- https://github.com/jwilder/nginx-proxy#ssl-support-using-letsencrypt
-- https://github.com/jwilder/nginx-proxy/issues/1132
-- https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion/issues/102
-- https://github.com/JrCs/docker-letsencrypt-nginx-proxy-companion/blob/master/docs/Invalid-authorizations.md
-- https://docs.traefik.io/v2.0/
-
-
-# unsolved error messages
-## traefik
-```
-docker-full-stack_traefik.1.yywpoj0qhxuq@sungryeol    | time="2019-08-28T08:03:59Z" level=error msg="Unable to obtain ACME certificate for domains \"sungryeol.xyz,sungryeol.xyz,www.sungryeol.xyz,api.sungryeol.xyz\" : unable to generate a certificate for the domains [sungryeol.xyz sungryeol.xyz www.sungryeol.xyz api.sungryeol.xyz]: acme: Error -> One or more domains had a problem:\n[www.sungryeol.xyz] acme: error: 400 :: urn:ietf:params:acme:error:connection :: Fetching http://www.sungryeol.xyz/.well-known/acme-challenge/VFQ-vUT3wBaDH9v71RWk8HH76j-iduJpMoyVbRN8YjY: Timeout during connect (likely firewall problem), url: \n"
-```
-## nginx
-```
-docker-full-stack_nginx-letsencrypt.1.l0k20jzsf3ss@sungryeol    | Location: https://acme-v01.api.letsencrypt.org/acme/reg/64416723
-...
-
-docker-full-stack_nginx-letsencrypt.1.l0k20jzsf3ss@sungryeol    | {
-docker-full-stack_nginx-letsencrypt.1.l0k20jzsf3ss@sungryeol    |   "type": "urn:acme:error:malformed",
-docker-full-stack_nginx-letsencrypt.1.l0k20jzsf3ss@sungryeol    |   "detail": "Registration key is already in use",
-docker-full-stack_nginx-letsencrypt.1.l0k20jzsf3ss@sungryeol    |   "status": 409
-docker-full-stack_nginx-letsencrypt.1.l0k20jzsf3ss@sungryeol    | }
-```
-> maybe it hit the rate limit?? as it used the non-staging url
