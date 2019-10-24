@@ -6,4 +6,4 @@ RUN yarn install
 COPY . .
 RUN apk --no-cache add curl
 EXPOSE 4000:4000
-CMD /wait && node server.js
+CMD node server.js

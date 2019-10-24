@@ -6,14 +6,12 @@ services:
     volumes:
       - "./traefik/traefik.dev.yaml:/etc/traefik/traefik.yaml" # without proper directory, it'll show no logs
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "./traefik/wait:/wait" # it is possible to include file into traefik image, but for the sake of saving registry spaces...
-    command: chmod +x /wait && /wait && traefik
     ports:
       - "80:80"
       - "433:433"
       - "8080:8080" # dashboard
-    environment:
-      - "WAIT_HOSTS=front:3000, api:4000"
+    # environment:
+    #   - "WAIT_HOSTS=front:3000, api:4000"
     deploy: # specify configuration for services(not container)
       labels: 
         - traefik.http.routers.proxy-testapp.rule=Host(`traefik.127.0.0.1.xip.io`) # must use backtick(`) instead of single quote(') - GoLang's feature
@@ -55,10 +53,10 @@ services:
         - traefik.http.services.api-testapp.loadbalancer.server.port=4000
         - traefik.enable=true
     environment:
-      - "WHITELIST=127.0.0.1.xip.io,http://127.0.0.1.xip.io"
-      - "MONGO_USERNAME=/run/secrets/testapp-mongo-username"
-      - "MONGO_PASSWORD=/run/secrets/testapp-mongo-password"
-      - "MONGO_URI=mongodb:27017"
+      WHITELIST: "127.0.0.1.xip.io,http://127.0.0.1.xip.io"
+      MONGO_URI: "mongodb:27017"
+      MONGO_USERNAME_FILE: /run/secrets/testapp-mongo-username
+      MONGO_PASSWORD_FILE: /run/secrets/testapp-mongo-password
     networks:
       - web-internal
     secrets:
@@ -68,8 +66,8 @@ services:
   mongodb:
     image: mongo:latest
     environment:
-      - "MONGO_INITDB_ROOT_USERNAME=/run/secrets/testapp-mongo-username"
-      - "MONGO_INITDB_ROOT_PASSWORD=/run/secrets/testapp-mongo-password"
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/testapp-mongo-username # _FILE option is officially supported via mongodb dockerimage
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/testapp-mongo-password
     volumes:
       - "mongo-data:/data/db"
     networks:
