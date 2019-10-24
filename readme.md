@@ -22,8 +22,15 @@
 - it's always safer to provide secrets in files rather than using environment variables, as everything is wrapped inside container. environment variables can leak to other containers in certain situations. be aware of it.
 - check volume when db authentication doesn't work. the authentcation data is created in the pilot run.
 - any volumes that are not *bind-mount* are PERSISTENT!
-- `node` caveats:
+- notes on `node.js`:
   - `services.${APP}.secrets` encoding is always `ascii`, like it or not. if the secret is provided in `utf8`, `mongodb` would reject the authentication, although the text itself seems the same to human eyes.
+- notes on TLS implementation:
+  - [notes on TLS challenge types](https://letsencrypt.org/docs/challenge-types/)
+  - [more notes on TLS challenge types](https://medium.com/@decrocksam/deploying-lets-encrypt-certificates-using-tls-alpn-01-https-18b9b1e05edf)
+    - `TLS-SNI-01`: has been disabled in March 2019. DO NOT USE.
+    - `DNS-01`: must provide DNS API secrets. can be dangerous when the server is attacked. ADVISABLE TO NOT TO USE.
+    - `TLS-ALPN-01` : traefik must be reachable via port 443. uses temporary certificates. [official docs on TLS-ALPN challenge](https://docs.traefik.io/user-guides/docker-compose/acme-tls/)
+    - `HTTP-01`: traefik must be reachable via port 80. can't use wildcard domain. some providers block port 80. uses temporary file serving. [official docs on HTTPS challenge](https://docs.traefik.io/user-guides/docker-compose/acme-http/)
 
 ## 내가 배운 것들
 - `nginx/proxy` 사용시 특이사항:
@@ -47,7 +54,7 @@
 - 암호는 항상 파일로 전달하는 편이 환경 변수로 전달하는 것보다 안전하다. 왜냐하면 파일과 달리 environment variable은 다른 컨테이너로 노출될 수 있기 때문이다. 따라서 여러 이미지를 굴리다보면 의도하지 않게 보안 취약점을 만들게 될 수 있다.
 - db 인증이 되지 않는다면 볼륨을 확인하여 삭제하자. 첫 실행에서 아이디와 비밀번호가 생성되는 것이 보통 관례이다. 휘발성 있는 k8의 볼륨과 달리 docker-swarm의 볼륨은 항상 유지되므로 주의하자.
 - db 로그인시 인코딩에 주의하자!
-- `node` 주의점:
+- `node.js` 주의점:
   - 도커 시크릿은 `ascii`로 인코딩됨에 유의하자. `utf8`으로 읽으면 겉으로는 같은 시크릿을 사용하더라도 실제 `mongodb`에는 로그인이 되지 않는다..
 
 ## test/deployment

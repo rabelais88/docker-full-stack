@@ -6,6 +6,7 @@ services:
     volumes:
       - "./traefik/traefik.dev.yaml:/etc/traefik/traefik.yaml" # without proper directory, it'll show no logs
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./letsencrypt:/letsencrypt"
     ports:
       - "80:80"
       - "433:433"
@@ -14,7 +15,7 @@ services:
     #   - "WAIT_HOSTS=front:3000, api:4000"
     deploy: # specify configuration for services(not container)
       labels: 
-        - traefik.http.routers.proxy-testapp.rule=Host(`traefik.127.0.0.1.xip.io`) # must use backtick(`) instead of single quote(') - GoLang's feature
+        - traefik.http.routers.proxy-testapp.rule=Host(`traefik.sungryeol.xyz`) # must use backtick(`) instead of single quote(') - GoLang's feature
         - traefik.http.services.proxy-testapp.loadbalancer.server.port=8080
         - traefik.docker.network=web-internal
       placement:
@@ -31,11 +32,15 @@ services:
     #   - "3000:3000"
     deploy:
       labels:
-        - traefik.http.routers.web-testapp.rule=Host(`127.0.0.1.xip.io`)
-        - traefik.http.routers.web-testapp.entrypoints=web # open to :80
-        - traefik.http.services.web-testapp.loadbalancer.server.port=3000
         - traefik.docker.network=web-internal
         - traefik.enable=true
+        - traefik.http.routers.web-testapp.rule=Host(`sungryeol.xyz`) # http setting
+        - traefik.http.routers.web-testapp.entrypoints=web # open to :80
+        - traefik.http.routers.web-testapp.middlewares=myredirect
+        - traefik.http.services.web-testapp.loadbalancer.server.port=3000 # listening port
+        - traefik.http.routers.web-testapp-tls.rule=Host(`sungryeol.xyz`)
+        - traefik.http.routers.web-testapp-tls.entrypoints=web-secure # open to :443
+        - traefik.http.routers.web-testapp-tls.tls.certresolver=mychallenge
     volumes:
       - "./frontend/src:/node/myapp/src"
       - "./frontend/public:/node/myapp/public"
@@ -48,12 +53,17 @@ services:
     #   - "4000:4000"
     deploy:
       labels:
-        - traefik.http.routers.api-testapp.rule=Host(`api.127.0.0.1.xip.io`)
-        - traefik.http.routers.api-testapp.entrypoints=web
-        - traefik.http.services.api-testapp.loadbalancer.server.port=4000
+        - traefik.docker.network=web-internal
         - traefik.enable=true
+        - traefik.http.routers.api-testapp.rule=Host(`api.sungryeol.xyz`) # http setting
+        - traefik.http.routers.api-testapp.entrypoints=web # open to :80
+        - traefik.http.routers.api-testapp.middlewares=myredirect
+        - traefik.http.services.api-testapp.loadbalancer.server.port=4000 # listening port
+        - traefik.http.routers.api-testapp-tls.rule=Host(`api.sungryeo.xyz`) # redirected
+        - traefik.http.routers.api-testapp-tls.entrypoints=web-secure # open to :443
+        - traefik.http.routers.api-testapp-tls.tls.certresolver=mychallenge
     environment:
-      - "WHITELIST=127.0.0.1.xip.io,http://127.0.0.1.xip.io"
+      - "WHITELIST=http://sungryeol.xyz,https://sungryeol.xyz"
       - "MONGO_URI=mongodb:27017"
       - MONGO_USERNAME=admin
       - MONGO_PASSWORD=1234

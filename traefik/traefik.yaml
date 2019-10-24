@@ -17,3 +17,19 @@ entryPoints:
     address: ":80"
   web-secure:
     address: ":443"
+
+# https://docs.traefik.io/middlewares/redirectscheme/
+http:
+  middlewares:
+    myredirect: # naming is arbitrary for middlewares
+      redirectScheme:
+        scheme: https
+
+certificatesResolvers:
+  mychallenge: # naming is arbitrary
+    acme:
+      httpChallenge: # Redirection is fully compatible with the HTTP-01 challenge.
+        entryPoint: web
+        email: sungryeolp@gmail.com
+        storage: "/letsencrypt/acme.json"
+        caServer: "https://acme-staging-v02.api.letsencrypt.org/directory" # for testing
