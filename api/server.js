@@ -1,3 +1,4 @@
+const fs = require('fs');
 const express = require("express");
 const cors = require("cors");
 
@@ -25,8 +26,18 @@ app.get("/", (req, res, next) => {
 
 const port = process.env.NODE_ENV || 4000;
 const mongoUri = `mongodb://${process.env.MONGO_URI || "127.0.0.1:27017"}`;
-const mongoUsername = process.env.MONGO_USERNAME;
-const mongoPassword = process.env.MONGO_PASSWORD;
+let mongoUsername = process.env.MONGO_USERNAME;
+let mongoPassword = process.env.MONGO_PASSWORD;
+try {
+  // watch out for encoding when reading secrets...
+  // ascii is equivalent to default environment secrets encoding
+  mongoUsername = fs.readFileSync(process.env.MONGO_USERNAME_FILE, 'ascii');
+  mongoPassword = fs.readFileSync(process.env.MONGO_PASSWORD_FILE, 'ascii');
+  console.log('> successfully read user secrets');
+} catch (err) {
+  console.error('!> secret file is missing');
+}
+
 const dbName = "database";
 const connectOptions = {
   useNewUrlParser: true,
@@ -39,14 +50,14 @@ if (mongoUsername) {
 
 const _procMain = async () => {
   try {
-    console.log(`> db connection to ${mongoUri} by ${mongoUsername}`);
+    console.log(`> db connection to ${mongoUri}`);
     await mongoose.connect(mongoUri, connectOptions);
     console.log("> db connected!!");
     app.listen(port, () => {
       console.log(`> server listening on port ${port}`);
     });
   } catch (err) {
-    console.log("> failed connection...retrying...");
+    console.log("!> failed connection...retrying...");
     console.error(err);
     process.exit(1);
   }

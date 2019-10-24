@@ -19,6 +19,11 @@
   - use backtick (&#96;) instead of ordinary single quote(') in `services.${APP}.deploy.labels`. *GoLang* has problem with reading single quoted strings.
   - `traefik` service must be designated as *swarm manager node*.
   - `driver:overlay` network is used for reaching separate nodes on different network. it may be not necessary, but can be used for scaling up in the future.
+- it's always safer to provide secrets in files rather than using environment variables, as everything is wrapped inside container. environment variables can leak to other containers in certain situations. be aware of it.
+- check volume when db authentication doesn't work. the authentcation data is created in the pilot run.
+- any volumes that are not *bind-mount* are PERSISTENT!
+- `node` caveats:
+  - `services.${APP}.secrets` encoding is always `ascii`, like it or not. if the secret is provided in `utf8`, `mongodb` would reject the authentication, although the text itself seems the same to human eyes.
 
 ## 내가 배운 것들
 - `nginx/proxy` 사용시 특이사항:
@@ -39,6 +44,11 @@
   - *GoLang*이 작은따옴표를 제대로 파싱하지 못하기 때문에 작은따옴표(') 대신 백틱(&#96;)을 사용해야 한다.
   - `traefik`용 서비스는 *manager node*로 지정해야 한다.
   - `driver:overlay`는 다른 네트워크에 있는 별도 노드에 접속하기 위해서 사용한다. 단일 노드일때에는 별로 중요하지 않은데, 후일 스케일업을 위해서 넣는 편이 좋다.
+- 암호는 항상 파일로 전달하는 편이 환경 변수로 전달하는 것보다 안전하다. 왜냐하면 파일과 달리 environment variable은 다른 컨테이너로 노출될 수 있기 때문이다. 따라서 여러 이미지를 굴리다보면 의도하지 않게 보안 취약점을 만들게 될 수 있다.
+- db 인증이 되지 않는다면 볼륨을 확인하여 삭제하자. 첫 실행에서 아이디와 비밀번호가 생성되는 것이 보통 관례이다. 휘발성 있는 k8의 볼륨과 달리 docker-swarm의 볼륨은 항상 유지되므로 주의하자.
+- db 로그인시 인코딩에 주의하자!
+- `node` 주의점:
+  - 도커 시크릿은 `ascii`로 인코딩됨에 유의하자. `utf8`으로 읽으면 겉으로는 같은 시크릿을 사용하더라도 실제 `mongodb`에는 로그인이 되지 않는다..
 
 ## test/deployment
 ```sh
@@ -52,4 +62,10 @@ echo "${MONGO_USERNAME}" | docker secret create testapp-mongo-username -
 echo "${MONGO_PASSWORD}" | docker secret create testapp-mongo-password -
 sh build-prod.sh
 docker stack deploy -c docker-compose.prod.yml test-app
+```
+
+## supplement
+- testing mongo user
+```sh
+mongo admin --username $USERNAME --password $PASSWORD
 ```
