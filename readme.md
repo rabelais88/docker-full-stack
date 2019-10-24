@@ -29,7 +29,7 @@
 - 앱은 직접 *healthcheck* 기능을 구현하고 있어야 한다. 그렇지 않으면 `curl`을 직접 설치해야되고 이는 이미지 용량에도 부담이 되며, 단순 url 핑 체크 이외의 기능을 구현하기가 까다로워진다.
 - 모든 설정은 파일이 아니라 환경변수를 통하여 제공되어야 한다. 그래야 오케스트레이션에서 한눈에 보고 설정하기 편하다.
 - `traefik` 버전 2.0 문서가 1.0보다 훨씬 낫다. LTS버전도 10월부터 2.0으로 올라갔다.
-- ACME let's encrypt는 [인증 횟수 제한](https://letsencrypt.org/docs/rate-limits/)이 있으므로 [stage url](https://letsencrypt.org/docs/staging-environment/)에서 개발하고 로그에 문제가 없으면 버전을 올리자.
+- ACME let's encrypt는 [인증 횟수 제한](https://letsencrypt.org/docs/rate-limits/)이 있으므로 [stage url](https://letsencrypt.org/docs/staging-environment/)에서 개발하고 로그에 문제가 없으면 버전을 올리자. 오케스트레이션을 통하여 자동인증을 받게 될 경우 기본세팅에 따라 대부분 인증이 성공할때까지 연속시도를 하게 되기 때문에, 금방 횟수 제한에 걸려 블락을 먹게 되기 때문이다. 블락을 먹게 될 경우 blacklist되었다는 내용이 메시지로 전달되므로 로그를 유심히 보자.
 - 개인적인 의견이지만, 개발 단계에서부터 `docker-swarm/docker-stack` 형식으로 개발하는 편이 `docker-compose`로 작성하고 나중에 양식을 변경하는 것보다 쉽다. 그리고 `traefik` 에서 두 가지를 다루는 방식이 꽤 다르기 때문에 나중에 골치가 아프다.
 - `traefik` 사용시 특이사항:
   - `traefik.yaml`이 없을 경우 로그가 아예 남지 않는다. 아무도 언급하지 않지만 제일 중요한 사항.
