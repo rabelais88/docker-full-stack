@@ -10,5 +10,5 @@ COPY --from=dependency /node/myapp/. /node/myapp/
 WORKDIR /node/myapp
 EXPOSE 3000:3000
 # env is added via compose.build.args
-ENV REACT_APP_API_URL "https://api.127.0.0.1.xyz"
+ENV REACT_APP_API_URL "http://api.127.0.0.1.xip.io"
 CMD node node_modules/.bin/react-scripts start
