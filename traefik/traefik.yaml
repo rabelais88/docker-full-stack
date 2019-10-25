@@ -28,8 +28,8 @@ http:
 certificatesResolvers:
   mychallenge: # naming is arbitrary
     acme:
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory" # for testing
+      email: sungryeolp@gmail.com
+      storage: "/letsencrypt/acme.json"
       httpChallenge: # Redirection is fully compatible with the HTTP-01 challenge.
         entryPoint: web
-        email: sungryeolp@gmail.com
-        storage: "/letsencrypt/acme.json"
-        caServer: "https://acme-staging-v02.api.letsencrypt.org/directory" # for testing
