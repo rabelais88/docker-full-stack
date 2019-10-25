@@ -24,7 +24,7 @@ http:
   middlewares:
     myredirect: # naming is arbitrary for middlewares
       redirectScheme:
-        scheme: https
+        scheme: web-secure
 
 certificatesResolvers:
   mychallenge: # naming is arbitrary
