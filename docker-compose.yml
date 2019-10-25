@@ -8,7 +8,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
     ports:
       - "80:80"
-      - "433:433"
+      - "443:443"
       - "8080:8080" # dashboard
     # environment:
     #   - "WAIT_HOSTS=front:3000, api:4000"
