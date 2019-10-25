@@ -1,6 +1,6 @@
 # full stack docker node.js app example with SSL
 
-## what I've learned in this
+## what I've learned in this(these are not on Google)
 - `nginx/proxy` has its own quirks, such as:
   - creating internal network may cause upstream error
   - gzip settings should be added separately in `vhost.d/${URL}`
@@ -21,18 +21,23 @@
   - `driver:overlay` network is used for reaching separate nodes on different network. it may be not necessary, but can be used for scaling up in the future.
 - it's always safer to provide secrets in files rather than using environment variables, as everything is wrapped inside container. environment variables can leak to other containers in certain situations. be aware of it.
 - check volume when db authentication doesn't work. the authentcation data is created in the pilot run.
-- any volumes that are not *bind-mount* are PERSISTENT!
+- any volumes that are not *bind-mount* are PERSISTENT! check volumes in any moment if anything is not working correctly. human consciousness is the weakest part of this automation.
 - notes on `node.js`:
   - `services.${APP}.secrets` encoding is always `ascii`, like it or not. if the secret is provided in `utf8`, `mongodb` would reject the authentication, although the text itself seems the same to human eyes.
-- notes on TLS implementation:
-  - [notes on TLS challenge types](https://letsencrypt.org/docs/challenge-types/)
-  - [more notes on TLS challenge types](https://medium.com/@decrocksam/deploying-lets-encrypt-certificates-using-tls-alpn-01-https-18b9b1e05edf)
+- notes on `HTTPS` implementation:
+  - [notes on HTTPS challenge types](https://letsencrypt.org/docs/challenge-types/)
+  - [more notes on HTTPS challenge types](https://medium.com/@decrocksam/deploying-lets-encrypt-certificates-using-tls-alpn-01-https-18b9b1e05edf)
     - `TLS-SNI-01`: has been disabled in March 2019. DO NOT USE.
     - `DNS-01`: must provide DNS API secrets. can be dangerous when the server is attacked. ADVISABLE TO NOT TO USE.
     - `TLS-ALPN-01` : traefik must be reachable via port 443. uses temporary certificates. [official docs on TLS-ALPN challenge](https://docs.traefik.io/user-guides/docker-compose/acme-tls/)
     - `HTTP-01`: traefik must be reachable via port 80. can't use wildcard domain. some providers block port 80. uses temporary file serving. [official docs on HTTPS challenge](https://docs.traefik.io/user-guides/docker-compose/acme-http/)
+- run [a temporary image](https://hub.docker.com/r/bretfisher/httpenv) before running on real web domain, to make sure the future work process is not hindered.
+- check `letsencrypt` json file in order to see if `HTTPS` challenge is successful.
+- check if port `:443` is mixed with `:433`.
+- don't use *redirect middleware*. use [HTTPS redirection header](https://docs.traefik.io/middlewares/headers/#using-security-headers). redirect middleware may not work in certain cases.
+- [the note on middleware](https://docs.traefik.io/middlewares/overview/) says `xxxx@file` suffix works for external files, but doesn't mention which files. the default `.yaml` or `.toml` is is not considered as `@docker` or `@file`. to make things simpler, just use `.deploy.labels` + `xxxx@docker`.
 
-## 내가 배운 것들
+## 내가 배운 것들(대부분 구글에서 찾을 수 없는 것들)
 - `nginx/proxy` 사용시 특이사항:
   - *internal network*을 만들면 *upstream error*를 발생시킨다.(`traefik`과 반대)
   - gzip 설정은 `vhost.d/${URL}` 디렉토리를 통하여 제공해야한다.
@@ -53,9 +58,21 @@
   - `driver:overlay`는 다른 네트워크에 있는 별도 노드에 접속하기 위해서 사용한다. 단일 노드일때에는 별로 중요하지 않은데, 후일 스케일업을 위해서 넣는 편이 좋다.
 - 암호는 항상 파일로 전달하는 편이 환경 변수로 전달하는 것보다 안전하다. 왜냐하면 파일과 달리 environment variable은 다른 컨테이너로 노출될 수 있기 때문이다. 따라서 여러 이미지를 굴리다보면 의도하지 않게 보안 취약점을 만들게 될 수 있다.
 - db 인증이 되지 않는다면 볼륨을 확인하여 삭제하자. 첫 실행에서 아이디와 비밀번호가 생성되는 것이 보통 관례이다. 휘발성 있는 k8의 볼륨과 달리 docker-swarm의 볼륨은 항상 유지되므로 주의하자.
-- db 로그인시 인코딩에 주의하자!
+- db 로그인시 인코딩에 주의하자! 또는 `stdout`과 파일, 환경변수가 각각 모두 다른 인코딩을 가지고 있을 수 있음에 주의하자!
 - `node.js` 주의점:
-  - 도커 시크릿은 `ascii`로 인코딩됨에 유의하자. `utf8`으로 읽으면 겉으로는 같은 시크릿을 사용하더라도 실제 `mongodb`에는 로그인이 되지 않는다..
+  - 도커 시크릿은 `ascii`로 인코딩됨에 유의하자. `utf8`으로 읽으면 겉으로는 같은 시크릿을 사용하더라도 실제 `mongodb`에는 로그인이 되지 않는다.
+- `HTTPS` 보안 구현:
+  - [HTTPS challenge 종류 설명](https://letsencrypt.org/docs/challenge-types/)
+  - [HTTPS challenge 종류 설명 2](https://medium.com/@decrocksam/deploying-lets-encrypt-certificates-using-tls-alpn-01-https-18b9b1e05edf)
+    - `TLS-SNI-01`: 2019년 3월에 종료(deprecated). *사용하지 말 것*.
+    - `DNS-01`: DNS API 암호키를 제공하여야 한다. 하지만 서버가 공격받을 경우 DNS에 등록된 개인정보까지 털릴 수 있어서 극도로 위험하다. *가능하면 이용하지 말 것.*
+    - `TLS-ALPN-01` : traefik이 443포트로 접근이 가능해야 한다. 임시 인증서를 발급하여 이를 DNS로 확인하는 challenge 방식. [official docs on TLS-ALPN challenge](https://docs.traefik.io/user-guides/docker-compose/acme-tls/)
+    - `HTTP-01`: traefik이 80포트로 접근이 가능해야 한다. 와일드카드 서브도메인(`*.xxxx.xxx`)을 사용할 수 없다. 일부 프로바이더들은 80포트를 안전상의 이유로 막아놓기도 한다. 임시 파일을 호스팅하여 이를 DNS로 확인하는 방식. [official docs on HTTPS challenge](https://docs.traefik.io/user-guides/docker-compose/acme-http/)
+- 템플릿을 서빙하는 [임시 이미지](https://hub.docker.com/r/bretfisher/httpenv)를 실제 웹 도메인에 먼저 올려서 나중의 인증작업에서 시간을 더 낭비하지 않도록 하자.
+- `letsencrypt` json file 을 확인하여 `HTTPS` 성공 여부를 확인 가능하다.
+- `:443`포트와 `:433` 포트를 헷갈리는 경우가 간혹 있다. 주의하자.
+- *redirect middleware*를 사용하지 말고 [HTTPS redirection header](https://docs.traefik.io/middlewares/headers/#using-security-headers) 를 사용하자. 특정 경우에서 *redirect middleware*가 이상하게도 동작하지 않는 경우가 있었다.
+- [middleware에 대한 traefik 공식 문서](https://docs.traefik.io/middlewares/overview/)에 따르면 `xxx@file` 이 외부 설정파일에 사용된다고만 하지 정확히 어디까지가 외부파일인지 명확하게 밝혀놓지 않았다. 기본 `.yaml` 이나 `.toml` 은 `@docker` 도 아니고 `@file` 도 아니다. 설정을 좀더 간단하게 하고 싶다면 `.deploy.labels` + `xxxx@docker` 를 결합하여 사용하는 쪽이 낫다.
 
 ## test/deployment
 ```sh
