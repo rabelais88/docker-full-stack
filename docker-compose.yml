@@ -18,7 +18,8 @@ services:
         - traefik.http.routers.proxy-testapp.rule=Host(`traefik.sungryeol.xyz`) # must use backtick(`) instead of single quote(') - GoLang's feature
         - traefik.http.services.proxy-testapp.loadbalancer.server.port=8080
         - traefik.docker.network=web-internal
-        - traefik.http.middlewares.myredirect.redirectscheme.scheme=https
+        # - traefik.http.middlewares.myredirect.redirectscheme.scheme=https
+        - traefik.http.middlewares.myredirect.sslredirect=true
       placement:
         constraints:
           - node.role == manager
