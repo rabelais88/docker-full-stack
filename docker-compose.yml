@@ -36,7 +36,7 @@ services:
         - traefik.enable=true
         - traefik.http.routers.web-testapp.rule=Host(`sungryeol.xyz`,`www.sungryeol.xyz`) # http setting
         - traefik.http.routers.web-testapp.entrypoints=web # open to :80
-        - traefik.http.routers.web-testapp.middlewares=myredirect@docker
+        - traefik.http.routers.web-testapp.middlewares=myredirect
         - traefik.http.services.web-testapp.loadbalancer.server.port=3000 # listening port
         - traefik.http.routers.web-testapp-tls.rule=Host(`sungryeol.xyz`,`www.sungryeol.xyz`)
         - traefik.http.routers.web-testapp-tls.entrypoints=web-secure # open to :443
@@ -57,7 +57,7 @@ services:
         - traefik.enable=true
         - traefik.http.routers.api-testapp.rule=Host(`api.sungryeol.xyz`) # http setting
         - traefik.http.routers.api-testapp.entrypoints=web # open to :80
-        - traefik.http.routers.api-testapp.middlewares=myredirect@docker
+        - traefik.http.routers.api-testapp.middlewares=myredirect
         - traefik.http.services.api-testapp.loadbalancer.server.port=4000 # listening port
         - traefik.http.routers.api-testapp-tls.rule=Host(`api.sungryeol.xyz`) # redirected
         - traefik.http.routers.api-testapp-tls.entrypoints=web-secure # open to :443
