@@ -19,13 +19,6 @@ entryPoints:
   web-secure:
     address: ":443"
 
-# https://docs.traefik.io/middlewares/redirectscheme/
-http:
-  middlewares:
-    myredirect: # naming is arbitrary for middlewares
-      redirectScheme:
-        scheme: web-secure
-
 certificatesResolvers:
   mychallenge: # naming is arbitrary
     acme:
