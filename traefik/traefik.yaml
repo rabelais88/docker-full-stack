@@ -12,18 +12,21 @@ api:
 log:
   level: DEBUG
 
+# https://docs.traefik.io/v1.4/user-guide/examples/#http-redirect-on-https
 entryPoints:
   web:
     address: ":80"
+    redirect:
+      entryPoint: web-secure
   web-secure:
     address: ":443"
 
 # https://docs.traefik.io/middlewares/redirectscheme/
-http:
-  middlewares:
-    myredirect: # naming is arbitrary for middlewares
-      redirectScheme:
-        scheme: https
+# http:
+#   middlewares:
+#     myredirect: # naming is arbitrary for middlewares
+#       redirectScheme:
+#         scheme: https
 
 certificatesResolvers:
   mychallenge: # naming is arbitrary
