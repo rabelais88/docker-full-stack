@@ -59,7 +59,7 @@ services:
         - traefik.http.routers.api-testapp.entrypoints=web # open to :80
         - traefik.http.routers.api-testapp.middlewares=myredirect
         - traefik.http.services.api-testapp.loadbalancer.server.port=4000 # listening port
-        - traefik.http.routers.api-testapp-tls.rule=Host(`api.sungryeo.xyz`) # redirected
+        - traefik.http.routers.api-testapp-tls.rule=Host(`api.sungryeol.xyz`) # redirected
         - traefik.http.routers.api-testapp-tls.entrypoints=web-secure # open to :443
         - traefik.http.routers.api-testapp-tls.tls.certresolver=mychallenge
     environment:
