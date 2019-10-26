@@ -31,8 +31,8 @@ let mongoPassword = process.env.MONGO_PASSWORD;
 try {
   mongoUsername = fs.readFileSync(process.env.MONGO_USERNAME_FILE, 'utf8');
   mongoPassword = fs.readFileSync(process.env.MONGO_PASSWORD_FILE, 'utf8');
-  mongoUsername.replace(/\n/g, '');
-  mongoPassword.replace(/\n/g, '');
+  mongoUsername.replace(/[\n\r]/g, '');
+  mongoPassword.replace(/[\n\r]/g, '');
   console.log('> successfully read user secrets');
 } catch (err) {
   console.error('!> secret file is missing');
