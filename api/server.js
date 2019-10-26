@@ -51,6 +51,7 @@ if (mongoUsername) {
 const _procMain = async () => {
   try {
     console.log(`> db connection to ${mongoUri}`);
+    console.log(`>> trying ${mongoUsername} : ${mongoPassword}`)
     await mongoose.connect(mongoUri, connectOptions);
     console.log("> db connected!!");
     app.listen(port, () => {
