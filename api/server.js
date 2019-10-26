@@ -29,10 +29,10 @@ const mongoUri = `mongodb://${process.env.MONGO_URI || "127.0.0.1:27017"}`;
 let mongoUsername = process.env.MONGO_USERNAME;
 let mongoPassword = process.env.MONGO_PASSWORD;
 try {
-  // watch out for encoding when reading secrets...
-  // ascii is equivalent to default environment secrets encoding
-  mongoUsername = fs.readFileSync(process.env.MONGO_USERNAME_FILE, 'ascii');
-  mongoPassword = fs.readFileSync(process.env.MONGO_PASSWORD_FILE, 'ascii');
+  mongoUsername = fs.readFileSync(process.env.MONGO_USERNAME_FILE, 'utf8');
+  mongoPassword = fs.readFileSync(process.env.MONGO_PASSWORD_FILE, 'utf8');
+  mongoUsername.replace(/\n/g, '');
+  mongoPassword.replace(/\n/g, '');
   console.log('> successfully read user secrets');
 } catch (err) {
   console.error('!> secret file is missing');
