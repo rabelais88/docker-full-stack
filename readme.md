@@ -23,7 +23,7 @@
 - check volume when db authentication doesn't work. the authentcation data is created in the pilot run.
 - any volumes that are not *bind-mount* are PERSISTENT! check volumes in any moment if anything is not working correctly. human consciousness is the weakest part of this automation.
 - notes on `node.js`:
-  - `services.${APP}.secrets` encoding is always `ascii`, like it or not. if the secret is provided in `utf8`, `mongodb` would reject the authentication, although the text itself seems the same to human eyes.
+  - `services.${APP}.secrets` arbitrarily inserts CRLF(carriage returns) when converting secret into a docker secret file. remove it via regex.
 - notes on `HTTPS` implementation:
   - [notes on HTTPS challenge types](https://letsencrypt.org/docs/challenge-types/)
   - [more notes on HTTPS challenge types](https://medium.com/@decrocksam/deploying-lets-encrypt-certificates-using-tls-alpn-01-https-18b9b1e05edf)
@@ -60,7 +60,7 @@
 - db 인증이 되지 않는다면 볼륨을 확인하여 삭제하자. 첫 실행에서 아이디와 비밀번호가 생성되는 것이 보통 관례이다. 휘발성 있는 k8의 볼륨과 달리 docker-swarm의 볼륨은 항상 유지되므로 주의하자.
 - db 로그인시 인코딩에 주의하자! 또는 `stdout`과 파일, 환경변수가 각각 모두 다른 인코딩을 가지고 있을 수 있음에 주의하자!
 - `node.js` 주의점:
-  - 도커 시크릿은 `ascii`로 인코딩됨에 유의하자. `utf8`으로 읽으면 겉으로는 같은 시크릿을 사용하더라도 실제 `mongodb`에는 로그인이 되지 않는다.
+  - 도커 시크릿은 입력값이 파일로 변환되면서 줄바꿈이 임의로 삽입된다. 줄바꿈을 항상 제거하고 시크릿 값을 사용하자
 - `HTTPS` 보안 구현:
   - [HTTPS challenge 종류 설명](https://letsencrypt.org/docs/challenge-types/)
   - [HTTPS challenge 종류 설명 2](https://medium.com/@decrocksam/deploying-lets-encrypt-certificates-using-tls-alpn-01-https-18b9b1e05edf)
