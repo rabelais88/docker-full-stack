@@ -67,10 +67,8 @@ services:
     environment:
       - "WHITELIST=http://sungryeol.xyz,https://sungryeol.xyz"
       - "MONGO_URI=mongodb:27017"
-      - MONGO_USERNAME=admin
-      - MONGO_PASSWORD=1234
-      # - "MONGO_USERNAME_FILE=/run/secrets/testapp-mongo-username"
-      # - "MONGO_PASSWORD_FILE=/run/secrets/testapp-mongo-password"
+      - "MONGO_USERNAME_FILE=/run/secrets/testapp-mongo-username"
+      - "MONGO_PASSWORD_FILE=/run/secrets/testapp-mongo-password"
     networks:
       - web-internal
     secrets:
