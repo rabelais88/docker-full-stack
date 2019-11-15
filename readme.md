@@ -15,7 +15,7 @@
   - if `traefik.yaml` is missing, `traefik` doesn't show any logs: really critical althrough nobody mentions it.
   - *http* and *https* host info should be provided for separately in `services.${APP}.deploy.labels`
   - all apps are interconnected w/o additional settings in `docker-swarm`. ports should be opened only for debugging purposes.(except `traefik` listening port) opening up unnecessary ports will make feasible attack vectors.
-  - use `docker container logs ${container name}` for container logs, `docker stack ps ${APP_NAME} --no-trunc` for service logs. both provides different logs, don't miss any one of them.
+  - use `docker container logs ${container name}` for container logs, `docker service ps ${APP_NAME} --no-trunc` for service logs. both provides different logs, don't miss any one of them.
   - use backtick (&#96;) instead of ordinary single quote(') in `services.${APP}.deploy.labels`. *GoLang* has problem with reading single quoted strings.
   - `traefik` service must be designated as *swarm manager node*.
   - `driver:overlay` network is used for reaching separate nodes on different network. it may be not necessary, but can be used for scaling up in the future.
@@ -52,7 +52,7 @@
   - `traefik.yaml`이 없을 경우 로그가 아예 남지 않는다. 아무도 언급하지 않지만 제일 중요한 사항.
   - *http* 와 *https* 용 `deploy.labels` 세팅은 각각 별도로 제공되어야 한다.
   - `docker-swarm`에서는 별도로 포트를 열지 않아도 모든 컨테이너의 포트가 서로 통신할 수 있다. `docker-compose` 파일에서 포트를 여는 것은 내부로 포트를 여는 것이 아니라 외부로 포트를 연다는 뜻이다. 포트는 디버그를 위해서 여는 것이고 불필요하게 포트를 열면 보안 취약점이 된다.
-  - `docker container logs ${container name}`으로 컨테이너 로그를 확인하고, `docker stack ps ${APP_NAME} --no-trunc`로 서비스 로그를 확인한다. 각기 다른 로그를 제공하므로 둘다 놓치지 않고 확인해야한다.
+  - `docker container logs ${container name}`으로 컨테이너 로그를 확인하고, `docker service ps ${APP_NAME} --no-trunc`로 서비스 로그를 확인한다. 각기 다른 로그를 제공하므로 둘다 놓치지 않고 확인해야한다.
   - *GoLang*이 작은따옴표를 제대로 파싱하지 못하기 때문에 작은따옴표(') 대신 백틱(&#96;)을 사용해야 한다.
   - `traefik`용 서비스는 *manager node*로 지정해야 한다.
   - `driver:overlay`는 다른 네트워크에 있는 별도 노드에 접속하기 위해서 사용한다. 단일 노드일때에는 별로 중요하지 않은데, 후일 스케일업을 위해서 넣는 편이 좋다.
