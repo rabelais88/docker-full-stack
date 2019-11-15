@@ -90,7 +90,7 @@ services:
 
 networks:
   web-internal:
-    name: web-internal
+    name: web-internal # essential for traefik's network discovery
     driver: overlay # allows contact different nodes
     # attachable: true # outside container can be attached to this network
 volumes:
